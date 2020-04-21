@@ -1,0 +1,493 @@
+- id: location_leave_enter
+  alias: location arrival/departure
+  trigger:
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.home
+    event: enter
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.home
+    event: leave
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.treasurecity
+    event: enter
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.treasurecity
+    event: leave
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.parents
+    event: enter
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.parents
+    event: leave
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.fionas
+    event: enter
+  - platform: zone
+    entity_id: person.jim_lean, person.alex_wood
+    zone: zone.fionas
+    event: leave
+  action:
+    service: notify.alexa_media_everywhere
+    data_template:
+      message: "{% if (trigger.event) == \"leave\" %}\n  {{ trigger.to_state.attributes.friendly_name\
+        \ }} has left {{ trigger.zone.attributes.friendly_name }}\n{% else %}\n  {{\
+        \ trigger.to_state.attributes.friendly_name }} has arrived at {{ trigger.zone.attributes.friendly_name\
+        \ }}\n{% endif %}\n"
+      title: "{% if (trigger.event) == \"leave\" %}\n  {{ trigger.to_state.attributes.friendly_name\
+        \ }} left {{ trigger.zone.attributes.friendly_name }}\n{% else %}\n  {{ trigger.to_state.attributes.friendly_name\
+        \ }} is at {{ trigger.zone.attributes.friendly_name }}\n{% endif %}\n"
+      data:
+        type: announce
+        method: all
+- id: kitchen_light_on
+  alias: Turn on kitchen light when there is movement
+  trigger:
+  - platform: state
+    entity_id: switch.kitchen_light
+    to: 'on'
+  - entity_id: binary_sensor.kitchen_multisensor_motion
+    platform: state
+    to: 'on'
+  action:
+  - entity_id: switch.kitchen_light
+    service: switch.turn_on
+  - service: timer.start
+    data:
+      entity_id: timer.kitchen
+
+- id: kitchen_light_off
+  alias: Turn off kitchen light 2 minutes after last movement
+  trigger:
+  - event_data:
+      entity_id: timer.kitchen
+    event_type: timer.finished
+    platform: event
+  - platform: state
+    entity_id: input_boolean.kitchen_light_override
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_boolean.kitchen_light_override
+    state: 'off'
+  action:
+  - entity_id: switch.kitchen_light
+    service: switch.turn_off
+
+- id: front_door_opened
+  alias: Announce when Front Door is Opened
+  trigger:
+    platform: state
+    entity_id: binary_sensor.front_door
+    to: 'on'
+  action:
+    service: notify.alexa_media_everywhere
+    data_template:
+      message: Front Door Has Opened!
+      title: Front Door
+      data:
+        type: announce
+        method: all
+
+- id: hallway_lights_on
+  alias: Turn on hallway lights when the front door opens or if the switch is pressed
+    (for only 2 mins)
+  trigger:
+  - platform: state
+    entity_id: light.hallway_light_level
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.front_door
+    to: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id:
+      - light.hallway_light_level
+      - light.wall_bulb
+      - light.door_bulb
+  - service: timer.start
+    data:
+      entity_id: timer.hallway
+
+- id: hallway_light_off
+  alias: Turn off hallway lights 2 minutes after trigger
+  trigger:
+  - event_data:
+      entity_id: timer.hallway
+    event_type: timer.finished
+    platform: event
+  - platform: state
+    entity_id: input_boolean.hallway_light_override
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_boolean.hallway_light_override
+    state: 'off'
+  action:
+  - data:
+      entity_id:
+      - light.hallway_light_level
+    service: light.turn_off
+
+- id: letterbox_moved
+  alias: letterbox moved
+  trigger:
+  - platform: state
+    entity_id: sensor.letterbox_action
+    to: 'tilt'
+  - platform: state
+    entity_id: sensor.letterbox_action
+    to: 'vibration'
+  condition:
+    condition: state
+    entity_id: binary_sensor.front_door
+    state: 'off'
+  action:
+    service: notify.alexa_media_everywhere
+    data_template:
+      message: You have post!
+      title: Postman has been
+      data:
+        type: announce
+        method: all
+
+- id: update_reminder_start
+  alias: Alert that there is an update available
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.updater
+  condition:
+    condition: and
+    conditions:
+    - condition: template
+      value_template: '{{ not is_state(''timer.update'', ''active'') }}'
+    - condition: state
+      entity_id: binary_sensor.updater
+      state: 'on'
+  action:
+  - service: timer.start
+    data:
+      entity_id: timer.update
+  - service: notify.alexa_media_everywhere
+    data_template:
+      message: "An update is available for Home Assistant to version {% if states.binary_sensor.updater\
+        \ %}\n  {{ state_attr('binary_sensor.updater','newest_version') }}\n {% endif\
+        \ %}\n"
+      title: Update Available For Home Assistant
+      data:
+        type: announce
+        method: all
+- id: update_reminder_start_at_homeassistant_start
+  alias: Alert that there is an update available when home assistant first starts
+    up
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition:
+    condition: and
+    conditions:
+    - condition: template
+      value_template: '{{ not is_state(''timer.update'', ''active'') }}'
+    - condition: state
+      entity_id: binary_sensor.updater
+      state: 'on'
+  action:
+  - service: timer.start
+    data:
+      entity_id: timer.update
+  - service: notify.alexa_media_everywhere
+    data_template:
+      message: "An update is available for Home Assistant to version {% if states.binary_sensor.updater\
+        \ %}\n {{ state_attr('binary_sensor.updater','newest_version') }}\n {% endif\
+        \ %}\n"
+      title: Update Available For Home Assistant
+      data:
+        type: announce
+        method: all
+- id: update_reminder_repeat
+  alias: Will remind every hour that an update is available, but only if the light
+    is on in the living room (ie you are in amd awake)
+  trigger:
+  - event_data:
+      entity_id: timer.update
+    event_type: timer.finished
+    platform: event
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.updater
+      state: 'on'
+    - condition: state
+      entity_id: light.living_room_lights
+      state: 'on'
+  action:
+  - data:
+      entity_id:
+      - timer.update
+    service: timer.start
+  - service: notify.alexa_media_everywhere
+    data_template:
+      message: "An update is available for Home Assistant to version {% if states.binary_sensor.updater\
+        \ %}\n {{ state_attr('binary_sensor.updater','newest_version') }}\n {% endif\
+        \ %}\n"
+      title: Update Available For Home Assistant
+      data:
+        type: announce
+        method: all
+- id: update_reminder_repeat_silent
+  alias: Will keep on resetting the timer for the update reminder, but not do the
+    announcing as you're asleep
+  trigger:
+  - event_data:
+      entity_id: timer.update
+    event_type: timer.finished
+    platform: event
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: light.living_room_lights
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.updater
+      state: 'on'
+  action:
+  - data:
+      entity_id:
+      - timer.update
+    service: timer.start
+- id: update_reminder_stop
+  alias: Updates are no longer available, so cancel reminders
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.updater
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.updater
+      state: 'off'
+    - condition: state
+      entity_id: timer.update
+      state: active
+  action:
+  - service: timer.cancel
+    data:
+      entity_id: timer.update
+- id: turn_off_when_away
+  alias: Turn everything off when not at home
+  trigger:
+  - platform: state
+    entity_id: group.anybody_home
+    from: home
+  action:
+  - service: light.turn_off
+    entity_id: all
+  - service: switch.turn_off
+    entity_id:
+    - switch.bedroom_tv
+  - service: input_boolean.turn_off
+    entity_id:
+    - input_boolean.tv_control
+  - service: climate.turn_off
+    entity_id:
+    - climate.heating
+- id: turn_off_tv
+  alias: properly turn off the TV
+  trigger:
+  - platform: state
+    entity_id: input_boolean.tv_control
+    to: 'off'
+  action:
+    service: script.turn_off_tv
+- id: turn_on_tv
+  alias: turn on the tv
+  trigger:
+  - platform: state
+    entity_id: input_boolean.tv_control
+    to: 'on'
+  action:
+  - service: switch.turn_on
+    entity_id: switch.tv_socket
+  - service: media_player.turn_on
+    entity_id:
+    - media_player.denon_avr_x2300w
+    - media_player.tv
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.denon_avr_x2300w
+      source: Media Player
+  - delay: 00:00:05
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.tv
+      source: HDMI 1
+- id: wake_tv
+  alias: Wake the TV if it wants to go to sleep
+  trigger:
+  - platform: state
+    entity_id: input_boolean.tv_wake
+    to: 'on'
+  action:
+  - service: remote.send_command
+    data:
+      entity_id: remote.harmony_hub
+      command:
+      - Select
+      device: Sony TV
+      delay_secs: 0.6
+  - delay: 00:00:02
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.tv_wake
+- id: restart_homeassistant
+  alias: Restart Home Assistant
+  trigger:
+    platform: state
+    entity_id: input_boolean.restart_home_assistant
+    to: 'on'
+  action:
+  - service: homeassistant.restart
+- id: homeassistant_started
+  alias: announce Home Assistant has started up
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+    service: notify.alexa_media_everywhere
+    data_template:
+      message: Home Assistant has Started!
+      title: Home Assistant Start
+      data:
+        type: announce
+
+- id: home_empty
+  alias: everyone has left so turn off non-essential items
+  trigger:
+    platform: state
+    entity_id: group.anybody_home
+    from: 'home'
+  action:
+    - service: script.home_empty
+    - service: switch.turn_off
+      entity_id:
+        - switch.bedroom_tv
+        - switch.bedroom_router
+    - service: light.turn_off
+      entity_id: 
+        - light.bedroom_light_level
+
+- id: zigbee2mqtt_log_level
+  alias: Zigbee2mqtt Log Level
+  description: Automation for sending MQTT message on input select change
+  initial_state: 'on'
+  trigger:
+    platform: state
+    entity_id: input_select.zigbee2mqtt_log_level
+  action:
+  - service: mqtt.publish
+    data:
+      payload_template: '{{ states(''input_select.zigbee2mqtt_log_level'') }}'
+      topic: zigbee2mqtt/bridge/config/log_level
+- id: zigbee_join_enabled
+  alias: Zigbee Join Enabled
+  description: Automation to start timer when enable join is turned on
+  trigger:
+    platform: state
+    entity_id: switch.zigbee2mqtt_permit_join
+    to: 'on'
+  action:
+    service: timer.start
+    entity_id: timer.zigbee_permit_join
+- id: zigbee_join_disabled
+  alias: Zigbee Join Disabled
+  description: Automation to stop timer when switch turned off and turn off switch
+    when timer finished
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.zigbee_permit_join
+  - platform: state
+    entity_id: switch.zigbee2mqtt_permit_join
+    to: 'off'
+  action:
+  - service: timer.cancel
+    data:
+      entity_id: timer.zigbee_permit_join
+  - service: switch.turn_off
+    entity_id: switch.zigbee2mqtt_permit_join
+
+- id: mqtt_birth_on_ha_start
+  alias: Send MQTT Birth message on HomeAssistant restart
+  trigger:
+  - platform: homeassistant
+    event: 'start'
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hass/status
+      payload: 'online'
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/availability
+      payload: 'online'
+
+- id: mqtt_last_will_on_ha_stop
+  alias: Send MQTT Last Will and Testement (LWT) message on HomeAssistant shutdown/stop
+  trigger:
+  - platform: homeassistant
+    event: 'shutdown'
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hass/status
+      payload: 'offline'
+  - service: mqtt.publish
+    data:
+      topic: homeassistant/availability
+      payload: 'offline'
+
+- id: force_tasmota_advertise_device_configs
+  alias: no idea why, but mqqt discovery isn't working, this is a work around
+  trigger:
+  - platform: homeassistant
+    event: start
+  action:
+  - service: mqtt.publish
+    data:
+      topic: cmnd/tasmotas/SetOption19
+      payload: '1'
+  - service: mqtt.publish
+    data:
+      topic: cmnd/TasmotasStayOn/SetOption19
+      payload: '1'
+
+- id: cummulative_energy_use_calculator
+  alias: 'Calculates the cummulative energy cost'
+  trigger:
+    platform: time
+    at: '23:59:50'
+  action:
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.cumulative_energy_cost
+      value: "{{ states('input_number.cumulative_energy_cost')|float + states('sensor.total_cost_today')|float }}"
+
+- id: turn_on_mandatory_switches
+  alias: try to stop switches that should stay on from turning off
+  trigger:
+    platform: state
+    entity_id: group.switches_keep_on
+    to: 'off'
+  action:
+    - service: switch.turn_on
+      entity_id: group.switches_keep_on

@@ -1,0 +1,433 @@
+title: Flat
+views:
+#  - path: default_view
+  - title: Home
+    badges:
+      - entity: binary_sensor.updater
+      - entity: sensor.energy_cost_whole_flat_monthly
+      - entity: sensor.energy_cost_whole_flat_immediate
+      - entity: sensor.energy_cost_fridge_immediate
+      - entity: sensor.energy_cost_fridge_monthly
+      - entity: sensor.zigbee2mqtt_bridge_state
+      - entity: sensor.zigbee2mqtt_version
+      - entity: sensor.dark_sky_summary
+      - entity: sensor.dark_sky_summary_0d
+      - entity: sensor.dark_sky_summary_0h
+      - entity: sensor.dark_sky_icon
+      - entity: sensor.dark_sky_icon_0d
+      - entity: sensor.dark_sky_icon_0h
+      - entity: sensor.dark_sky_temperature
+      - entity: sensor.dark_sky_temperature_0h
+      - entity: sensor.gdacs_54_97004570852898_1_61973774433136
+      - entity: sensor.united_kingdom_coronavirus_confirmed
+      - entity: sensor.united_kingdom_coronavirus_current
+      - entity: sensor.united_kingdom_coronavirus_recovered
+      - entity: sensor.united_kingdom_coronavirus_deaths
+      - entity: sensor.local_ip
+      - entity: sensor.daily_energy
+      - entity: sensor.weekly_energy
+      - entity: sensor.monthly_energy
+      - entity: sensor.yearly_energy
+      - entity: sensor.hourly_energy
+      - entity: sun.sun
+      - entity: timer.hallway
+      - entity: timer.kitchen
+      - entity: timer.bathroom
+      - entity: timer.update
+    cards:
+      - title: Bathroom
+        type: entities
+        entities:
+        - switch.boiler_hot_water
+        - input_boolean.bathroom_light_override
+        - entity: binary_sensor.0x00158d0001d6693a_occupancy
+          name: Motion_occupancy
+        - entity: sensor.0x00158d0001a4c80a_temperature
+          name: Climate Temperature
+        - entity: sensor.0x00158d0001a4c80a_humidity
+          name: Climate Humidity
+        - entity: sensor.0x00158d0001a4c80a_pressure
+          name: Climate Pressure
+        - entity: sensor.bathroom_vibration_action
+          name: Vibration_action
+        - entity: sensor.bathroom_vibration_sensitivity
+          name: Vibration_sensitivity
+        - entity: sensor.bathroom_vibration_strength
+          name: Vibration_strength
+        - entity: sensor.0x00158d0001d6693a_linkquality
+          name: Motion_linkquality
+        - entity: sensor.0x00158d0001a4c80a_linkquality
+          name: Climate Link Quality
+        - entity: sensor.bathroom_vibration_linkquality
+          name: Vibration_linkquality
+      - entity: media_player.bathroom_echo
+        type: media-control
+      - entities:
+        - entity: zwave.bedroom_light
+          name: Light
+        - entity: light.bedroom_light_level
+          name: Light
+        - entity: sensor.0x00158d000171df3f_temperature
+          name: Climate Temperature
+        - entity: sensor.0x00158d000171df3f_humidity
+          name: Climate Humidity
+        - entity: sensor.0x00158d000171df3f_pressure
+          name: Climate Pressure
+        - entity: sensor.0x00158d000171df3f_linkquality
+          name: Climate Link Quality
+        - entity: switch.bedroom_router
+          name: Router
+        - entity: sensor.bedroom_router_energy_apparentpower
+          name: Router ENERGY ApparentPower
+        - entity: sensor.bedroom_router_energy_current
+          name: Router ENERGY Current
+        - entity: sensor.bedroom_router_energy_factor
+          name: Router ENERGY Factor
+        - entity: sensor.bedroom_router_energy_power
+          name: Router ENERGY Power
+        - entity: sensor.bedroom_router_energy_reactivepower
+          name: Router ENERGY ReactivePower
+        - entity: sensor.bedroom_router_energy_today
+          name: Router ENERGY Today
+        - entity: sensor.bedroom_router_energy_total
+          name: Router ENERGY Total
+        - entity: sensor.bedroom_router_energy_totalstarttime
+          name: Router ENERGY TotalStartTime
+        - entity: sensor.bedroom_router_energy_voltage
+          name: Router ENERGY Voltage
+        - entity: sensor.bedroom_router_energy_yesterday
+          name: Router ENERGY Yesterday
+        - entity: sensor.bedroom_router_status
+          name: Router status
+        - entity: switch.bedroom_tv
+          name: TV
+        - entity: sensor.bedroom_tv_energy_apparentpower
+          name: TV ENERGY ApparentPower
+        - entity: sensor.bedroom_tv_energy_current
+          name: TV ENERGY Current
+        - entity: sensor.bedroom_tv_energy_factor
+          name: TV ENERGY Factor
+        - entity: sensor.bedroom_tv_energy_power
+          name: TV ENERGY Power
+        - entity: sensor.bedroom_tv_energy_reactivepower
+          name: TV ENERGY ReactivePower
+        - entity: sensor.bedroom_tv_energy_today
+          name: TV ENERGY Today
+        - entity: sensor.bedroom_tv_energy_total
+          name: TV ENERGY Total
+        - entity: sensor.bedroom_tv_energy_totalstarttime
+          name: TV ENERGY TotalStartTime
+        - entity: sensor.bedroom_tv_energy_voltage
+          name: TV ENERGY Voltage
+        - entity: sensor.bedroom_tv_energy_yesterday
+          name: TV ENERGY Yesterday
+        - entity: sensor.bedroom_tv_status
+          name: TV status
+        title: Bedroom
+        type: entities
+      - entity: media_player.bedroom_echo
+        type: media-control
+      - entities:
+        - entity: sensor.xiaomi_gateway_illumination_sensor
+        - entity: zwave.hallway_light
+          name: Light
+        - entity: light.hallway_light_level
+          name: Light Level
+        - sensor.0x00158d00019fc364_linkquality
+        - binary_sensor.front_door
+        - sensor.letterbox_action
+        - sensor.letterbox_sensitivity
+        - sensor.letterbox_strength
+        - sensor.letterbox_linkquality
+        title: Hallway
+        type: entities
+      - entity: media_player.hallway_echo
+        type: media-control
+      - entities:
+        - entity: sensor.kitchen_multisensor_luminance
+          name: Luminance
+        - entity: sensor.kitchen_multisensor_relative_humidity
+          name: Relative Humidity
+        - entity: binary_sensor.kitchen_multisensor_motion
+          name: Motion
+        - entity: sensor.kitchen_multisensor_temperature
+          name: Temperature
+        - entity: zwave.kitchen_multisensor
+          name: Multisensor
+        - switch.fridge_socket
+        - sensor.fridge_socket_energy_totalstarttime
+        - sensor.fridge_socket_energy_total
+        - sensor.fridge_socket_energy_yesterday
+        - sensor.fridge_socket_energy_today
+        - sensor.fridge_socket_energy_power
+        - sensor.fridge_socket_energy_apparentpower
+        - sensor.fridge_socket_energy_reactivepower
+        - sensor.fridge_socket_energy_factor
+        - sensor.fridge_socket_energy_voltage
+        - sensor.fridge_socket_energy_current
+        - sensor.fridge_socket_status
+        - entity: switch.kitchen_light
+          name: Light
+        - entity: sensor.kitchen_light_action
+          name: Light Action
+        - entity: sensor.kitchen_light_click
+          name: Light Click
+        - entity: sensor.kitchen_light_linkquality
+          name: Light Link Quality
+        title: Kitchen
+        type: entities
+      - entities:
+        - entity: binary_sensor.hp_m477fdn_status
+        - zwave.z_wave_sigma_designs_unknown_type_0003_id_0008
+        - entity: zwave.living_room_multisensor
+          name: Multisensor
+        - entity: sensor.hp_m477fdn_status
+        - entity: sensor.living_room_multisensor_luminance
+          name: Luminance
+        - entity: sensor.living_room_multisensor_relative_humidity
+          name: Relative Humidity
+        - entity: sensor.living_room_multisensor_temperature
+          name: Temperature
+        - entity: binary_sensor.living_room_multisensor_motion
+          name: Motion
+        - sensor.hdhomerun_tuner_1250e08c_2
+        - sensor.hdhomerun_tuner_1250e08c_3
+        - sensor.hdhomerun_tuner_1250e08c_0
+        - sensor.hdhomerun_tuner_1250e08c_1
+        - switch.routers
+        - sensor.routers_energy_totalstarttime
+        - sensor.routers_energy_total
+        - sensor.routers_energy_yesterday
+        - sensor.routers_energy_today
+        - sensor.routers_energy_power
+        - sensor.routers_energy_apparentpower
+        - sensor.routers_energy_reactivepower
+        - sensor.routers_energy_factor
+        - sensor.routers_energy_voltage
+        - sensor.routers_energy_current
+        - sensor.routers_status
+        - switch.tv_socket
+        - sensor.tv_socket_energy_totalstarttime
+        - sensor.tv_socket_energy_total
+        - sensor.tv_socket_energy_yesterday
+        - sensor.tv_socket_energy_today
+        - sensor.tv_socket_energy_power
+        - sensor.tv_socket_energy_apparentpower
+        - sensor.tv_socket_energy_reactivepower
+        - sensor.tv_socket_energy_factor
+        - sensor.tv_socket_energy_voltage
+        - sensor.tv_socket_energy_current
+        - sensor.tv_socket_status
+        - switch.alexa_socket
+        - sensor.alexa_socket_energy_totalstarttime
+        - sensor.alexa_socket_energy_total
+        - sensor.alexa_socket_energy_yesterday
+        - sensor.alexa_socket_energy_today
+        - sensor.alexa_socket_energy_power
+        - sensor.alexa_socket_energy_apparentpower
+        - sensor.alexa_socket_energy_reactivepower
+        - sensor.alexa_socket_energy_factor
+        - sensor.alexa_socket_energy_voltage
+        - sensor.alexa_socket_energy_current
+        - sensor.alexa_socket_status
+        - switch.charger_socket
+        - sensor.charger_socket_energy_totalstarttime
+        - sensor.charger_socket_energy_total
+        - sensor.charger_socket_energy_yesterday
+        - sensor.charger_socket_energy_today
+        - sensor.charger_socket_energy_power
+        - sensor.charger_socket_energy_apparentpower
+        - sensor.charger_socket_energy_reactivepower
+        - sensor.charger_socket_energy_factor
+        - sensor.charger_socket_energy_voltage
+        - sensor.charger_socket_energy_current
+        - sensor.charger_socket_status
+        - switch.pc_socket
+        - sensor.pc_socket_energy_totalstarttime
+        - sensor.pc_socket_energy_total
+        - sensor.pc_socket_energy_yesterday
+        - sensor.pc_socket_energy_today
+        - sensor.pc_socket_energy_power
+        - sensor.pc_socket_energy_apparentpower
+        - sensor.pc_socket_energy_reactivepower
+        - sensor.pc_socket_energy_factor
+        - sensor.pc_socket_energy_voltage
+        - sensor.pc_socket_energy_current
+        - sensor.pc_socket_status
+        - switch.alex_s_fire_tablet_do_not_disturb_switch
+        - sensor.alex_s_echo_show_next_reminder
+        - sensor.hp_color_laserjet_mfp_m477fdn_uptime
+        - sensor.hp_color_laserjet_mfp_m477fdn_black_cartridge_hp_cf410a
+        - sensor.hp_color_laserjet_mfp_m477fdn_cyan_cartridge_hp_cf411a
+        - sensor.hp_color_laserjet_mfp_m477fdn_magenta_cartridge_hp_cf413a
+        - sensor.hp_color_laserjet_mfp_m477fdn_yellow_cartridge_hp_cf412a
+        - sensor.hp_color_laserjet_mfp_m477fdn
+        title: Living Room
+        type: entities
+      - entity: media_player.living_room_tv
+        type: media-control
+      - entity: media_player.living_room_speaker
+        type: media-control
+      - entity: media_player.plex_plex_media_player_plexmediaplayer
+        type: media-control
+      - entity: media_player.alex_s_echo_show
+        type: media-control
+      - entities:
+        - sensor.hacs
+        - sensor.adguard_average_processing_speed
+        - sensor.adguard_parental_control_blocked
+        - sensor.adguard_safe_searches_enforced
+        - sensor.adguard_dns_queries_blocked_ratio
+        - sensor.adguard_dns_queries
+        - sensor.adguard_safe_browsing_blocked
+        - switch.adguard_safe_search
+        - switch.adguard_protection
+        - switch.adguard_safe_browsing
+        - switch.adguard_parental_control
+        - switch.adguard_filtering
+        title: Logical
+        type: entities
+      - entity: media_player.alex_s_alexa_app_for_pc
+        type: media-control
+      - entity: media_player.everywhere
+        type: media-control
+      - entities:
+        - sensor.plex_thematrix
+        - entity: sensor.0x00158d000172025b_temperature
+          name: Climate Temperature
+        - entity: sensor.0x00158d000172025b_humidity
+          name: Climate Humidity
+        - entity: sensor.0x00158d000172025b_pressure
+          name: Climate Pressure
+        - entity: sensor.0x00158d000172025b_linkquality
+          name: Climate Link Quality
+        - switch.server_socket
+        - sensor.server_socket_energy_totalstarttime
+        - sensor.server_socket_energy_total
+        - sensor.server_socket_energy_yesterday
+        - sensor.server_socket_energy_today
+        - sensor.server_socket_energy_power
+        - sensor.server_socket_energy_apparentpower
+        - sensor.server_socket_energy_reactivepower
+        - sensor.server_socket_energy_factor
+        - sensor.server_socket_energy_voltage
+        - sensor.server_socket_energy_current
+        - sensor.server_socket_status
+        title: Office
+        type: entities
+      - entities:
+        - zwave.boiler
+        - sensor.home_energy_meter_unknown
+        - sensor.home_energy_meter_energy
+        - sensor.home_energy_meter_power
+        - sensor.home_energy_meter_previous_current
+        - sensor.home_energy_meter_previous_energy
+        - sensor.home_energy_meter_previous_power
+        - sensor.home_energy_meter_previous_voltage
+        - zwave.home_energy_meter
+        - sensor.home_energy_meter_voltage
+        - sensor.home_energy_meter2_energy
+        - sensor.home_energy_meter2_current
+        - sensor.home_energy_meter_current
+        - sensor.home_energy_meter2_power
+        - sensor.home_energy_meter2_previous_current
+        - sensor.home_energy_meter2_previous_energy
+        - sensor.home_energy_meter2_previous_power
+        - sensor.home_energy_meter2_previous_voltage
+        - sensor.home_energy_meter2_voltage
+        - switch.boiler_heating
+        - switch.boiler_hot_water
+        title: Storage Cupboard
+        type: entities
+      - entities:
+        - sensor.redmi_k20_wifi_connection
+        - sensor.redmi_k20_geocoded_location
+        - sensor.alex_s_iphone_mobile_1_activity
+        - sensor.alex_s_iphone_mobile_1_bssid
+        - sensor.alex_s_iphone_mobile_1_connection_type
+        - sensor.alex_s_iphone_mobile_1_distance
+        - sensor.alex_s_iphone_mobile_1_floors_ascended
+        - sensor.alex_s_iphone_mobile_1_floors_descended
+        - sensor.alex_s_iphone_mobile_1_geocoded_location
+        - sensor.alex_s_iphone_mobile_1_last_update_trigger
+        - sensor.alex_s_iphone_mobile_1_sim_1
+        - sensor.alex_s_iphone_mobile_1_ssid
+        - sensor.alex_s_iphone_mobile_1_steps
+        - sensor.alex_s_iphone_mobile_2_activity_2
+        - sensor.alex_s_iphone_mobile_2_bssid_2
+        - sensor.alex_s_iphone_mobile_2_connection_type_2
+        - sensor.alex_s_iphone_mobile_2_distance_2
+        - sensor.alex_s_iphone_mobile_2_floors_ascended_2
+        - sensor.alex_s_iphone_mobile_2_floors_descended_2
+        - sensor.alex_s_iphone_mobile_2_geocoded_location_2
+        - sensor.alex_s_iphone_mobile_2_last_update_trigger_2
+        - sensor.alex_s_iphone_mobile_2_sim_1_2
+        - sensor.alex_s_iphone_mobile_2_ssid_2
+        - sensor.alex_s_iphone_mobile_2_steps_2
+        title: Wearable
+        type: entities
+      - entities:
+        - person.alex_wood
+        - person.jim_lean
+        show_header_toggle: true
+        title: Is there anybody home
+        type: entities
+      - entity: climate.heating
+        type: thermostat
+      - entities:
+        - input_boolean.restart_home_assistant
+        - input_boolean.hallway_light_override
+        - input_boolean.kitchen_light_override
+        - input_boolean.tv_control
+        - input_boolean.tv_wake
+        title: Input boolean
+        type: entities
+      - entities:
+        - input_select.theme_selector
+        title: Input select
+        type: entities
+      - entities:
+        - light.door_bulb
+        - light.living_room_lights
+        - light.wall_bulb
+        - light.gateway_light_34ce00924452
+        title: Light
+        type: entities
+      - entity: media_player.kodi_libreelec_local
+        type: media-control
+      - entity: media_player.plex_plex_media_player_plexmediaplayer_2
+        type: media-control
+      - entities:
+        - remote.harmony_hub
+        title: Remote
+        type: entities
+      - entities:
+        - script.goodnight
+        - script.turn_off_tv
+        - script.turn_off_common_items
+        - script.video
+        title: Script
+        type: entities
+      - entity: weather.dark_sky
+        type: weather-forecast
+      - entity: weather.flat
+        type: weather-forecast
+#      - geo_location_sources:
+#        - all
+      - type: map
+        hours_to_show: 24
+        entities:
+          - person.alex_wood
+          - person.jim_lean
+      - type: entities
+        title: Zigbee Control
+        entities:
+          - switch.zigbee2mqtt_permit_join
+          - entity: timer.zigbee_permit_join
+          - script.zigbee2mqtt_remove
+          - script.zigbee2mqtt_rename
+          - input_text.zigbee2mqtt_new_name
+          - input_text.zigbee2mqtt_old_name
+          - input_text.zigbee2mqtt_remove
+          - input_select.zigbee2mqtt_log_level
+

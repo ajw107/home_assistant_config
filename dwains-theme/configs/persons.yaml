@@ -1,0 +1,44 @@
+# https://dwainscheeren.github.io/lovelace-dwains-theme/configuration/persons.html
+
+# persons: 
+#   - name: Dwain
+#     track: person.dwain
+#     picture_path: 'images/persons/dwain.jpg'
+#     more_entities:
+#       columns: 1 #optional
+#       entities:
+#         - entity: sensor.steps
+#         - entity: sensor.steps
+#     page_entities:
+#       columns: 2 #optional
+#       entities:
+#         - entity: sensor.steps
+#         - entity: sensor.steps
+
+ persons: 
+   - name: Alex
+     track: person.alex_wood
+     picture_path: 'images/persons/alex.jpg'
+     more_entities:
+       columns: 1 #optional
+       entities:
+         - entity: sensor.alex_s_iphone_mobile_1_steps
+         - entity: sensor.alex_s_iphone_mobile_1_distance
+     page_entities:
+       columns: 2 #optional
+       entities:
+         - entity: sensor.alex_s_iphone_mobile_1_floors_ascended
+         - entity: sensor.alex_s_iphone_mobile_1_floors_descended
+   - name: Jim
+     track: person.jim_lean
+     picture_path: 'images/persons/jim.jpg'
+     more_entities: []
+#       columns: 1 #optional
+#       entities:
+#         - entity: sensor.alex_s_iphone_mobile_1_steps
+#         - entity: sensor.alex_s_iphone_mobile_1_distance
+     page_entities: []
+#       columns: 2 #optional
+#       entities:
+#         - entity: sensor.alex_s_iphone_mobile_1_floors_ascended
+#         - entity: sensor.alex_s_iphone_mobile_1_floors_descended

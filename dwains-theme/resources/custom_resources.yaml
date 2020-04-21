@@ -1,0 +1,9 @@
+# Own resources?
+# Add here your own resources
+#
+
+# - type: module
+#   url: /to_your_folder/filename.js
+  - type: module
+    url: /local/zigbee2mqtt-networkmap.js?v=0.6.0
+

@@ -1,0 +1,138 @@
+turn_off_tv:
+  alias: Turn Off TV
+  #description: Turn off TV and associated equipment in the correct sequence
+  icon: mdi:television
+  sequence:
+    - condition: state
+      entity_id: switch.tv_socket
+      state: 'on'
+    #- alias: Tell Plex to shut down
+    - service: shell_command.shut_down_plex_player
+    #- alias: Announce waiting
+    - service: notify.alexa_media_everywhere
+      data_template:
+        message: "Waiting for Plex to shut down"
+        title: "Turning off TV"
+        data:
+          type: announce
+    #- alias: Give the shut down chance to complete
+    - delay: '00:00:10'
+    # alias: Turn off the power
+    - service: switch.turn_off
+      data:
+        entity_id: switch.tv_socket
+    #- alias: announce tv turned off
+    - service: notify.alexa_media_everywhere
+      data_template:
+        message: "TV has now been turned off!"
+        title: "TV turned off"
+        data:
+          type: announce
+
+
+turn_off_common_items:
+  alias: Turns off most things apart from things in the bedroom and bathroom (common to goodnight and empty house)
+  #description: Turn off everything when time for bed, but turn on bedroom light to have something to aim towards
+  icon: mdi:power-plug-off
+  sequence:
+    #- alias: turn off overrides
+    - service: input_boolean.turn_off
+      data:
+        entity_data:
+          - input_boolean.kitchen_light_override
+          - input_boolean.hallway_light_override
+          - input_boolean.bathroom_light_override
+    #- alias: turn off other lights (apart from bathroom)
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.door_bulb
+          - light.wall_bulb
+          - light.hallway_light_level
+    #- alias: turn off kitchen light and hot water
+    - service: switch.turn_off
+      data:
+        entity_id:
+          - switch.kitchen_light
+          - switch.boiler_hot_water
+    #- alias: turn off heating
+    - service: climate.turn_off
+      data:
+        entity_id: climate.heating
+    #- alias: turn off tv
+    - service: script.turn_off_tv
+
+goodnight:
+  alias: Bedtime
+  #description: Turn off everything when time for bed, but turn on bedroom light to have something to aim towards
+  icon: mdi:bed-double
+  sequence:
+    #- alias: turn on bedroom light
+    - service: light.turn_on
+      data:
+        entity_id: light.bedroom_light_level
+        brightness: 100
+    #- alias: turns off most things, apart from stuff in the bedroom and bathroom
+    - service: script.turn_off_common_items
+    #- alias: announce complete
+    - service: notify.alexa_media_everywhere
+      data_template:
+        message: "Goodnight, flat ready for bed!"
+        title: "Goodnight!"
+        data:
+          type: announce
+
+video:
+  alias: video
+  #description: Switch TV screen on and turn everything over to PLEX
+  icon: mdi:television
+  sequence:
+    #- alias: Make sure TV Screen and Amplifier are on
+    - service: media_player.turn_on
+      data:
+        entity_id:
+          - media_player.denon_avr_x2300w
+          - media_player.tv
+    #- alias: Wait a few seconds for everything to turn on
+    - delay: '00:00:05'
+    #- alias: Turn Amplifier over to Media Player
+    - service: media_player.select_source
+      data:
+        entity_id: media_player.denon_avr_x2300w
+        source: 'Media Player'
+    #- alias: Turn TV over to HDMI 1
+    - service: media_player.select_source
+      data:
+        entity_id: media_player.tv
+        source: 'HDMI 1'
+
+zigbee2mqtt_rename:
+  alias: Zigbee2mqtt Rename
+  sequence:
+    service: mqtt.publish
+    data_template:
+      topic: zigbee2mqtt/bridge/config/rename
+      payload_template: >-
+        {
+          "old": "{{ states.input_text.zigbee2mqtt_old_name.state | string }}",
+          "new": "{{ states.input_text.zigbee2mqtt_new_name.state | string }}"
+        }
+
+zigbee2mqtt_remove:
+  alias: Zigbee2mqtt Remove
+  sequence:
+    service: mqtt.publish
+    data_template:
+      topic: zigbee2mqtt/bridge/config/remove
+      payload_template: "{{ states.input_text.zigbee2mqtt_remove.state | string }}"
+
+reset_cumulative_cost:
+  sequence:
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.cumulative_energy_cost
+      value: 0
+  - service: input_datetime.set_datetime
+    entity_id: input_datetime.last_reset
+    data_template:
+      date: "{{ as_timestamp(now())|timestamp_custom('%Y-%m-%d') }}"

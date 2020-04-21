@@ -1,0 +1,957 @@
+#TODO: dark sky has been bought by apple, change weather provider
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+homeassistant:
+  # If you want to customize entries with friendly_name or custom icon.
+  # Read more here: https://www.home-assistant.io/docs/configuration/customizing-devices/
+  # Uncomment line below and create file customize.yaml or edit it
+  customize: !include customize.yaml
+
+  # Below entry links to the packages folder required for Dwains Theme
+  packages: !include_dir_named packages/ # Comment this whole line if you want to disable Dwains Theme
+
+  # If you had any important strings before in homeassistant: place them back here below
+  #
+#End of dwains-theme necessary code#
+
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+http:
+  base_url: !secret homeass_baseurl
+
+alexa:
+  smart_home:
+    locale: en-GB
+    endpoint: https://api.eu.amazonalexa.com/v3/events
+    client_id: !secret homeass_alex_client_id
+    client_secret: !secret homeass_alexa_client_secret
+    filter:
+      exclude_domains:
+        - timer
+        - media_player
+        - automation
+      exclude_entities:
+        - switch.alex_s_fire_tablet_do_not_disturb_switch
+        - switch.tv_socket
+        - switch.boiler_heating
+        - binary_sensor.bedroom_tv_button1
+        - binary_sensor.bedroom_router_button1
+        - binary_sensor.fridge_socket_button1
+        - binary_sensor.alexa_socket_button1
+        - binary_sensor.charger_socket_button1
+        - binary_sensor.routers_button1
+        - sensor.531df1d0_34e4670f
+        - light.531df1d0_34e4670f
+        - media_player.531df1d0_34e4670f
+        - switch.adguard_filtering
+        - switch.adguard_parental_control
+        - switch.adguard_protection
+        - switch.adguard_safe_browsing
+        - switch.adguard_safe_search
+        - switch.zigbee2mqtt_permit_join
+        - sensor.dafecc30_2122b581
+        - light.dafecc30_2122b581
+        - media_player.dafecc30_2122b581
+        - sensor.dark_sky_temperature_0h
+        - sensor.dark_sky_temperature_1h
+        - sensor.f224ceb3_fb7bdb87
+        - light.f224ceb3_fb7bdb87
+        - media_player.f224ceb3_fb7bdb87
+        - binary_sensor.updater
+        - switch.pc_socket
+        - switch.fridge_socket
+        - switch.server_socket
+        - group.switches_keep_on
+    entity_config:
+      input_boolean.tv_wake:
+        name: "Wake Up TV"
+        description: "Wakes up the TV if it wants to go to sleep"
+        display_categories: SWITCH
+      input_boolean.tv_control:
+        name: "TV"
+        description: "Properly turn all TV devices on and off in sequence"
+        display_categories: SWITCH
+      input_boolean.restart_home_assistant:
+        name: "Restart H A"
+        description: "Signals to Home Assistant that it should restart"
+        display_categories: SWITCH
+      input_boolean.bathroom_light_override:
+        name: "Bathroom Light Override"
+        description: "Stops bathroom lights from automatically turning off"
+        display_categories: SWITCH
+      input_boolean.kitchen_light_override:
+        name: "Kitchen Light Override"
+        description: "Stops kitchen light from automatically turning off"
+        display_categories: SWITCH
+      input_boolean.hallway_light_override:
+        name: "Hallway Light Override"
+        description: "Stops hallway lights from automatically turning off"
+        display_categories: SWITCH
+      light.gateway_light_34ce00924452:
+        name: "Hallway Night Light"
+        description: "Hallway RGB Night Light"
+        display_categories: LIGHT
+      light.hallway_light_level:
+        name: "Hallway Light"
+        description: "Ceiling Hallway Lights"
+        display_categories: LIGHT
+      light.bedroom_light_level:
+        name: "Bedroom Light"
+        description: "Ceiling Bedroom Light"
+        display_categories: LIGHT
+      switch.kitchen_light:
+        name: "Kitchen Light"
+        description: "Ceiling Kitchen Light"
+        display_categories: LIGHT
+      binary_sensor.front_door:
+        name: "Front Door Sensor"
+        description: "Senses if Front Door is Open or Closed"
+        display_categories: CONTACT_SENSOR
+      binary_sensor.kitchen_multisensor_motion:
+        display_categories: MOTION_SENSOR
+      binary_sensor.living_room_multisensor_motion:
+        display_categories: MOTION_SENSOR
+      binary_sensor.0x00158d0001d6693a_occupancy:
+        name: "Bathroom Motion"
+        description: "Bathroom PIR sensor"
+        display_categories: MOTION_SENSOR
+      group.anybody_home:
+        name: "Is there anybody home"
+        description: "Is either Alex or Jim home"
+        display_categories: MOTION_SENSOR
+influxdb:
+  host: !secret the_matrix_address
+  port: !secret influx_db_port
+  database: !secret influxdb_db_name
+  tags:
+    source: HomeAssistant
+  tags_attributes: friendly_names
+  default_measurement: state
+
+discovery:
+  ignore:
+    - yeelight
+
+yeelight:
+  devices:
+    192.168.32.81:
+      name: Door Bulb
+      save_on_change: true
+      model: color1
+      transition: 350
+      use_music_mode: false
+    192.168.32.82:
+      name: Wall Bulb
+      save_on_change: true
+      model: color1
+      transition: 350
+      use_music_mode: false
+
+light:
+  - platform: group
+    name: Living Room Lights
+    entities:
+      - light.wall_bulb
+      - light.door_bulb
+
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - key: !secret xiaomi_gateway_access_key
+
+media_player:
+  - platform: denonavr
+#    host: IP_ADDRESS
+#    name: NAME
+#    show_all_sources: true
+#    timeout: POSITIVE INTEGER
+#    zones:
+#      - zone: Zone2 / Zone3
+#        name: NAME
+  - platform: braviatv
+    host: !secret living_room_tv_ip
+    name: TV
+
+hdhomerun:
+    # Host addresses are optional, if none are specified then entities will be populated by network discovery.
+    sensor:
+        - host: !secret hd_homerun_ip
+
+device_tracker:
+  - platform: netgear
+    password: !secret netgear_password
+
+#sabnzbd:
+#  host: sabnzbd-service
+#  port: 443
+#  ssl: true
+#  api_key: !secret sabnzbd_api_key
+
+remote:
+  - platform: harmony
+    name: Harmony Hub
+    host: !secret harmony_hub_ip
+
+#withings:
+#  client_id: !secret withings_client_id
+#  client_secret: !secret withings_client_secret
+#  profiles:
+#    - 'Alex Wood'
+
+
+climate:
+  - platform: generic_thermostat
+    name: Heating
+    heater: switch.boiler_heating
+    target_sensor: sensor.average_living_room_temperature
+    min_temp: 10
+    max_temp: 30
+    target_temp: 24
+    ac_mode: false
+    min_cycle_duration: '00:05:00'
+    cold_tolerance: 0.5
+    hot_tolerance: 0
+    keep_alive: '00:50:00'
+    away_temp: 10
+#    initial_hvac_mode: "off"
+    precision: 0.1
+
+hacs:
+  token: !secret homeass_hacs_token
+  appdaemon: true
+  netdaemon: true
+
+shell_command:
+  shut_down_plex_player: "/usr/bin/ssh -i /config/TheMatrix_rsa -o ForwardX11=No -o StrictHostKeyChecking=No root@192.168.32.95 \"sync; poweroff -f\""
+
+input_boolean:
+  tv_control:
+    name: properly turn on and off the TV
+#    initial: off
+    icon: mdi:television
+  restart_home_assistant:
+    name: Restart Home Assistant
+    initial: off
+    icon: mdi:home-assistant
+  tv_wake:
+    name: wake up the TV if it wants to go to sleep
+    initial: off
+    icon: mdi:television
+  bathroom_light_override:
+    name: Stop Bathroom Light from automatically turning off
+    initial: off
+    icon: mdi:lightbulb-on-outline
+  kitchen_light_override:
+    name: Stop Kitchen Light from automatically turning off
+    initial: off
+    icon: mdi:lightbulb-on-outline
+  hallway_light_override:
+    name: Stop Hallway Light from automatically turning off
+    initial: off
+    icon: mdi:lightbulb-on-outline
+
+# Switch for enabling joining
+switch:
+  - platform: mqtt
+    name: "Zigbee2mqtt Permit join"
+    availability_topic: "zigbee2mqtt/bridge/state"
+    payload_available: "online"
+    state_topic: "zigbee2mqtt/bridge/config/permit_join"
+    command_topic: "zigbee2mqtt/bridge/config/permit_join"
+    payload_on: "true"
+    payload_off: "false"
+
+recorder:
+  db_url: !secret mysql_server_details
+  purge_keep_days: 28
+
+# Example configuration.yaml entry
+# Text to speech
+tts:
+  - platform: google_translate
+#homeassistant:
+#  customize: !include customize.yaml
+group: !include groups.yaml
+#automation: !include automations.yaml
+automation: !include_dir_merge_list configuration/automations/ #place every automation in this folder
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+timer:
+  hallway:
+    duration: '00:02:00'
+  kitchen:
+    duration: '00:02:00'
+  bathroom:
+    duration: '00:02:00'
+  update:
+    duration: '01:00:00'
+  zigbee_permit_join:
+    name: Time remaining
+    duration: '00:10:00' # Updated this to the number of seconds you wish
+
+weather:
+  - platform: darksky
+    api_key: !secret dark_sky_api
+    units: uk
+
+sensor:
+  - platform: aftership
+    api_key: !secret aftership_api
+  - platform: seventeentrack
+    username: !secret email
+    password: !secret 17trackpass
+    show_delivered: true
+  - platform: darksky
+    api_key: !secret dark_sky_api
+    forecast:
+      - 0
+    hourly_forecast:
+      - 0
+      - 1
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature
+    scan_interval: '00:10:00'
+  - platform: mqtt
+    name: Zigbee2MQTT Bridge state
+    state_topic: "zigbee2mqtt/bridge/state"
+    icon: mdi:router-wireless
+  - platform: mqtt
+    name: Zigbee2mqtt Version
+    state_topic: "zigbee2mqtt/bridge/config"
+    value_template: "{{ value_json.version }}"
+    icon: mdi:zigbee
+  # Sensor for Showing the Coordinator Version
+  - platform: mqtt
+    name: Coordinator Version
+    state_topic: "zigbee2mqtt/bridge/config"
+    value_template: "{{ value_json.coordinator }}"
+    icon: mdi:chip
+  - platform: statistics
+    name: 'Power Stats'
+    entity_id: sensor.home_energy_meter_power
+    sampling_size: 10000
+    max_age:
+      hours: 24
+    precision: 1
+  - platform: template
+    sensors:
+      average_living_room_temperature:
+        friendly_name: "Average Living Room Temperature"
+        device_class: temperature
+        unit_of_measurement: °C
+        value_template: >
+          {{ ((states('sensor.living_room_multisensor_temperature')|float + 
+               states('sensor.0x00158d00047ddd66_temperature')|float + 
+               states('sensor.0x00158d0004610c9c_temperature')|float) / 3) | round(2) }}
+      whole_flat_monthly_energy_cost:
+        friendly_name: "Whole Flat Energy Cost Monthly"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.whole_flat_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      whole_flat_daily_energy_cost:
+        friendly_name: "Whole Flat Energy Cost Daily"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.whole_flat_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      whole_flat_hourly_energy_cost:
+        friendly_name: "Whole Flat Energy Cost Hourly"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.whole_flat_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      whole_flat_immediate_energy_cost:
+        friendly_name: "Whole Flat Energy Cost Immediate"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.home_energy_meter_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      fridge_energy_cost_yesterday:
+        friendly_name: "Fridge Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.fridge_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      fridge_energy_cost_daily_using_device:
+        friendly_name: "Fridge Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.fridge_socket_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      fridge_energy_cost_immediate_using_device:
+        friendly_name: "Fridge Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.fridge_socket_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      fridge_energy_cost_monthly_using_device:
+        friendly_name: "Fridge Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.fridge_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      fridge_energy_cost_immediate_using_utility:
+        friendly_name: "Fridge Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.fridge_socket_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      fridge_energy_cost_daily_using_utility:
+        friendly_name: "Fridge Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.fridge_socket_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      fridge_energy_cost_monthly_using_utility:
+        friendly_name: "Fridge Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.fridge_socket_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      alexa_energy_cost_yesterday:
+        friendly_name: "Alexa Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.alexa_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      alexa_energy_cost_daily_using_device:
+        friendly_name: "Alexa Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.alexa_socket_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      alexa_energy_cost_immediate_using_device:
+        friendly_name: "Alexa Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.alexa_socket_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      alexa_energy_cost_monthly_using_device:
+        friendly_name: "Alexa Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.alexa_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      alexa_energy_cost_immediate_using_utility:
+        friendly_name: "Alexa Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.alexa_socket_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      alexa_energy_cost_daily_using_utility:
+        friendly_name: "Alexa Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.alexa_socket_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      alexa_energy_cost_monthly_using_utility:
+        friendly_name: "Alexa Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.alexa_socket_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_router_energy_cost_yesterday:
+        friendly_name: "Bedroom Router Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_router_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_router_energy_cost_daily_using_device:
+        friendly_name: "Bedroom Router Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_router_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_router_energy_cost_immediate_using_device:
+        friendly_name: "Bedroom Router Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.bedroom_router_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_router_energy_cost_monthly_using_device:
+        friendly_name: "Bedroom Router Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_router_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      bedroom_router_energy_cost_immediate_using_utility:
+        friendly_name: "Bedroom Router Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_router_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_router_energy_cost_daily_using_utility:
+        friendly_name: "Bedroom Router Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_router_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_router_energy_cost_monthly_using_utility:
+        friendly_name: "Bedroom Router Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_router_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_tv_energy_cost_yesterday:
+        friendly_name: "Bedroom TV Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_tv_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_tv_energy_cost_daily_using_device:
+        friendly_name: "Bedroom TV Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_tv_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_tv_energy_cost_immediate_using_device:
+        friendly_name: "Bedroom TV Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.bedroom_tv_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_tv_energy_cost_monthly_using_device:
+        friendly_name: "Bedroom TV Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_tv_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      bedroom_tv_energy_cost_immediate_using_utility:
+        friendly_name: "Bedroom TV Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_tv_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_tv_energy_cost_daily_using_utility:
+        friendly_name: "Bedroom TV Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_tv_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      bedroom_tv_energy_cost_monthly_using_utility:
+        friendly_name: "Bedroom TV Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.bedroom_tv_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      charger_energy_cost_yesterday:
+        friendly_name: "Charger Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.charger_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      charger_energy_cost_daily_using_device:
+        friendly_name: "Charger Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.charger_socket_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      charger_energy_cost_immediate_using_device:
+        friendly_name: "Charger Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.charger_socket_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      charger_energy_cost_monthly_using_device:
+        friendly_name: "Charger Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.charger_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      charger_energy_cost_immediate_using_utility:
+        friendly_name: "Charger Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.charger_socket_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      charger_energy_cost_daily_using_utility:
+        friendly_name: "Charger Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.charger_socket_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      charger_energy_cost_monthly_using_utility:
+        friendly_name: "Charger Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.charger_socket_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      pc_energy_cost_yesterday:
+        friendly_name: "PC Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.pc_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      pc_energy_cost_daily_using_device:
+        friendly_name: "PC Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.pc_socket_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      pc_energy_cost_immediate_using_device:
+        friendly_name: "PC Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.pc_socket_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      pc_energy_cost_monthly_using_device:
+        friendly_name: "PC Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.pc_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      pc_energy_cost_immediate_using_utility:
+        friendly_name: "PC Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.pc_socket_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      pc_energy_cost_daily_using_utility:
+        friendly_name: "PC Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.pc_socket_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      pc_energy_cost_monthly_using_utility:
+        friendly_name: "PC Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.pc_socket_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2)}}"
+      routers_energy_cost_yesterday:
+        friendly_name: "Routers Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.routers_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      routers_energy_cost_daily_using_device:
+        friendly_name: "Routers Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.routers_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      routers_energy_cost_immediate_using_device:
+        friendly_name: "Routers Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.routers_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      routers_energy_cost_monthly_using_device:
+        friendly_name: "Routers Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.routers_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      routers_energy_cost_immediate_using_utility:
+        friendly_name: "Routers Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.routers_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      routers_energy_cost_daily_using_utility:
+        friendly_name: "Routers Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.routers_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      routers_energy_cost_monthly_using_utility:
+        friendly_name: "Routers Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.routers_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      server_energy_cost_yesterday:
+        friendly_name: "Server Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.server_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      server_energy_cost_daily_using_device:
+        friendly_name: "Server Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.server_socket_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      server_energy_cost_immediate_using_device:
+        friendly_name: "Server Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.server_socket_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      server_energy_cost_monthly_using_device:
+        friendly_name: "Server Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.server_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      server_energy_cost_immediate_using_utility:
+        friendly_name: "Server Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.server_socket_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      server_energy_cost_daily_using_utility:
+        friendly_name: "Server Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.server_socket_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      server_energy_cost_monthly_using_utility:
+        friendly_name: "Server Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.server_socket_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tv_energy_cost_yesterday:
+        friendly_name: "TV Energy Cost for Yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tv_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tv_energy_cost_daily_using_device:
+        friendly_name: "TV Energy Cost so far Today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tv_socket_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tv_energy_cost_immediate_using_device:
+        friendly_name: "TV Energy Cost Immediate using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.tv_socket_energy_power')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tv_energy_cost_monthly_using_device:
+        friendly_name: "TV Energy Cost Monthly using Device figures"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tv_socket_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) * 30}}"
+      tv_energy_cost_immediate_using_utility:
+        friendly_name: "TV Energy Cost Immediate using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tv_socket_hourly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tv_energy_cost_daily_using_utility:
+        friendly_name: "TV Energy Cost Daily using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tv_socket_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tv_energy_cost_monthly_using_utility:
+        friendly_name: "TV Energy Cost Monthly using Utility Meter"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tv_socket_monthly_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tasmotas_total_energy_yesterday:
+        friendly_name: 'Tasmotas Total Yesterday'
+        entity_id:
+          - sensor.alexa_socket_energy_yesterday
+          - sensor.bedroom_router_energy_yesterday
+          - sensor.bedroom_tv_energy_yesterday
+          - sensor.charger_socket_energy_yesterday
+          - sensor.fridge_socket_energy_yesterday
+          - sensor.pc_socket_energy_yesterday
+          - sensor.routers_energy_yesterday
+          - sensor.server_socket_energy_yesterday
+          - sensor.tv_socket_energy_yesterday
+        value_template: >- 
+          {{ expand('group.energy_meters_yesterday') | map(attribute='state') | map('float') | sum | round(2) }}
+        unit_of_measurement: 'kWh'
+      tasmotas_total_energy_cost_yesterday:
+        friendly_name: "The cost of all devices attached to Tasmotas yesterday"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tasmotas_total_energy_yesterday')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tasmotas_total_energy_today:
+        friendly_name: 'Tasmotas Total Today'
+        entity_id:
+          - sensor.alexa_socket_energy_today
+          - sensor.bedroom_router_energy_today
+          - sensor.bedroom_tv_energy_today
+          - sensor.charger_socket_energy_today
+          - sensor.fridge_socket_energy_today
+          - sensor.pc_socket_energy_today
+          - sensor.routers_energy_today
+          - sensor.server_socket_energy_today
+          - sensor.tv_socket_energy_today
+        value_template: >- 
+          {{ expand('group.energy_meters_today') | map(attribute='state') | map('float') | sum | round(2) }}
+        unit_of_measurement: 'kWh'
+      tasmotas_total_energy_cost_today:
+        friendly_name: "The cost of all devices attached to Tasmotas so far today"
+        unit_of_measurement: '£'
+        value_template: "{{ (states('sensor.tasmotas_total_energy_today')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      tasmotas_total_energy_immediate:
+        friendly_name: 'Tasmotas Total Current'
+        entity_id:
+          - sensor.alexa_socket_energy_power
+          - sensor.bedroom_router_energy_power
+          - sensor.bedroom_tv_energy_power
+          - sensor.charger_socket_energy_power
+          - sensor.fridge_socket_energy_power
+          - sensor.pc_socket_energy_power
+          - sensor.routers_energy_power
+          - sensor.server_socket_energy_power
+          - sensor.tv_socket_energy_power
+        value_template: >- 
+          {{ expand('group.energy_meters_immediate') | map(attribute='state') | map('float') | sum | round(2) }}
+        unit_of_measurement: 'W'
+      tasmotas_total_energy_cost_immediate:
+        friendly_name: "The current cost of all devices attached to Tasmotas"
+        unit_of_measurement: '£'
+        value_template: "{{ ((states('sensor.tasmotas_total_energy_immediate')|float / 1000) * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+      total_cost_today:
+        friendly_name: 'Total Cost So Far Today'
+        value_template: "{{ (states('sensor.whole_flat_daily_energy')|float * states('input_number.energy_cost_per_kwh')|float)|round(2) }}"
+        unit_of_measurement: "£"  
+      cumulative_energy_cost:
+        friendly_name: 'Cumulative Energy Cost' #### for Lovelace display only. Calculations use the input_number.
+        value_template: "{{ states('input_number.cumulative_energy_cost')|float|round(2) }}"
+        unit_of_measurement: "£"
+      last_reset:
+        friendly_name: 'Last Reset' # Date the cumulative total cost was reset.
+        value_template: "{{ states('input_datetime.last_reset') }}"
+
+#webhook:
+#  zigbee2mqtt_networkmap:
+#    #topic: your topic (optional, default zigbee2mqtt)
+
+panel_iframe:
+  tasmoadmin:
+    title: TasmoAdmin
+    icon: mdi:lightbulb-on
+    url: !secret tasmo_admin_ip
+#  networkmap:
+#    title: 'Zigbee Map'
+#    url: '/hacsfiles/zigbee2mqtt_networkmap/map.html'
+#    icon: 'mdi:graphql'
+#  - platform: mqtt
+#    name: Zigbee2mqtt Networkmap
+    # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
+#    state_topic: zigbee2mqtt/bridge/networkmap/raw
+#    value_template: >-
+#      {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
+    # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
+#    json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
+
+lovelace:
+  mode: yaml
+  resources:
+    - url: /local/zigbee2mqtt-networkmap.js?v=0.6.0
+      type: module
+    - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+      type: module
+    - url: /hacsfiles/lovelace-fold-entity-row/fold-entity-row.js
+      type: module
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+      type: module
+    - url: /hacsfiles/decluttering-card/decluttering-card.js
+      type: module
+    - url: /hacsfiles/lovelace-canary/canary.js
+      type: module
+    - url: /hacsfiles/lovelace-auto-entities/auto-entities.js
+      type: module
+    - url: /hacsfiles/bar-card/bar-card.js
+      type: module
+    - url: /hacsfiles/aftership-card/aftership-card.js
+      type: module
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/harmony-card/harmony-card.js
+      type: module
+  dashboards:
+    lovelace-main:
+      mode: yaml
+      title: Main
+      icon: mdi:home-account
+      show_in_sidebar: true
+      filename: lovelace-main.yaml
+    lovelace-energy:
+      mode: yaml
+      title: Energy
+      icon: mdi:flash
+      show_in_sidebar: true
+      filename: lovelace-energy.yaml
+    lovelace-map:
+      mode: yaml
+      title: Map
+      icon: mdi:map
+      show_in_sidebar: true
+      filename: lovelace-map.yaml
+
+mqtt:
+#  broker: #core-mosquitto # This will have to be your mqtt broker, Mosquitto addon is recommended.
+  broker: !secret the_matrix_address
+  port: !secret mqtt_port
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  client_id: home_ass
+#  birth_message:
+#    topic: 'hass/status'
+#    payload: 'online'
+#  will_message:
+#    topic: 'hass/status'
+#    payload: 'offline'
+
+# Input select for Zigbee2mqtt debug level
+input_select:
+  zigbee2mqtt_log_level:
+    name: Zigbee2mqtt Log Level
+    options:
+      - debug
+      - info
+      - warn
+      - error
+    initial: info
+    icon: mdi:format-list-bulleted
+
+# Input text to input Zigbee2mqtt friendly_name for scripts
+input_text:
+  zigbee2mqtt_old_name:
+    name: Zigbee2mqtt Old Name
+  zigbee2mqtt_new_name:
+    name: Zigbee2mqtt New Name
+  zigbee2mqtt_remove:
+    name: Zigbee2mqtt Remove
+
+logger:
+  default: warning
+  logs:
+    homeassistant.components.mqtt: debug
+
+utility_meter:
+  whole_flat_daily_energy:
+    source: sensor.home_energy_meter_energy
+    cycle: daily
+  whole_flat_weekly_energy:
+    source: sensor.home_energy_meter_energy
+    cycle: weekly
+  whole_flat_monthly_energy:
+    source: sensor.home_energy_meter_energy
+    cycle: monthly
+  whole_flat_yearly_energy:
+    source: sensor.home_energy_meter_energy
+    cycle: yearly
+  whole_flat_hourly_energy:
+    source: sensor.home_energy_meter_energy
+    cycle: hourly
+  fridge_socket_hourly_energy:
+    source: sensor.fridge_socket_energy_total
+    cycle: hourly
+  fridge_socket_daily_energy:
+    source: sensor.fridge_socket_energy_total
+    cycle: daily
+  fridge_socket_monthly_energy:
+    source: sensor.fridge_socket_energy_total
+    cycle: monthly
+  fridge_socket_yearly_energy:
+    source: sensor.fridge_socket_energy_total
+    cycle: yearly
+  alexa_socket_hourly_energy:
+    source: sensor.alexa_socket_energy_total
+    cycle: hourly
+  alexa_socket_daily_energy:
+    source: sensor.alexa_socket_energy_total
+    cycle: daily
+  alexa_socket_monthly_energy:
+    source: sensor.alexa_socket_energy_total
+    cycle: monthly
+  alexa_socket_yearly_energy:
+    source: sensor.alexa_socket_energy_total
+    cycle: yearly
+  bedroom_router_hourly_energy:
+    source: sensor.bedroom_router_energy_total
+    cycle: hourly
+  bedroom_router_daily_energy:
+    source: sensor.bedroom_router_energy_total
+    cycle: daily
+  bedroom_router_monthly_energy:
+    source: sensor.bedroom_router_energy_total
+    cycle: monthly
+  bedroom_router_yearly_energy:
+    source: sensor.bedroom_router_energy_total
+    cycle: yearly
+  bedroom_tv_hourly_energy:
+    source: sensor.bedroom_tv_energy_total
+    cycle: hourly
+  bedroom_tv_daily_energy:
+    source: sensor.bedroom_tv_energy_total
+    cycle: daily
+  bedroom_tv_monthly_energy:
+    source: sensor.bedroom_tv_energy_total
+    cycle: monthly
+  bedroom_tv_yearly_energy:
+    source: sensor.bedroom_tv_energy_total
+    cycle: yearly
+  charger_socket_hourly_energy:
+    source: sensor.charger_socket_energy_total
+    cycle: hourly
+  charger_socket_daily_energy:
+    source: sensor.charger_socket_energy_total
+    cycle: daily
+  charger_socket_monthly_energy:
+    source: sensor.charger_socket_energy_total
+    cycle: monthly
+  charger_socket_yearly_energy:
+    source: sensor.charger_socket_energy_total
+    cycle: yearly
+  pc_socket_hourly_energy:
+    source: sensor.pc_socket_energy_total
+    cycle: hourly
+  pc_socket_daily_energy:
+    source: sensor.pc_socket_energy_total
+    cycle: daily
+  pc_socket_monthly_energy:
+    source: sensor.pc_socket_energy_total
+    cycle: monthly
+  pc_socket_yearly_energy:
+    source: sensor.pc_socket_energy_total
+    cycle: yearly
+  routers_hourly_energy:
+    source: sensor.routers_energy_total
+    cycle: hourly
+  routers_daily_energy:
+    source: sensor.routers_energy_total
+    cycle: daily
+  routers_monthly_energy:
+    source: sensor.routers_energy_total
+    cycle: monthly
+  routers_yearly_energy:
+    source: sensor.routers_energy_total
+    cycle: yearly
+  server_socket_hourly_energy:
+    source: sensor.server_socket_energy_total
+    cycle: hourly
+  server_socket_daily_energy:
+    source: sensor.server_socket_energy_total
+    cycle: daily
+  server_socket_monthly_energy:
+    source: sensor.server_socket_energy_total
+    cycle: monthly
+  server_socket_yearly_energy:
+    source: sensor.server_socket_energy_total
+    cycle: yearly
+  tv_socket_hourly_energy:
+    source: sensor.tv_socket_energy_total
+    cycle: hourly
+  tv_socket_daily_energy:
+    source: sensor.tv_socket_energy_total
+    cycle: daily
+  tv_socket_monthly_energy:
+    source: sensor.tv_socket_energy_total
+    cycle: monthly
+  tv_socket_yearly_energy:
+    source: sensor.tv_socket_energy_total
+    cycle: yearly
+
+input_number:
+  whole_flat_daily_cost:
+    name: Whole Flat Daily Cost
+    mode: box
+    min: 0
+    max: 100
+    unit_of_measurement: "£/day"
+    icon: mdi:currency-gbp
+  energy_cost_per_kwh:
+    name: Energy Cost Per kWh
+    mode: box
+    min: 0
+    max: 10 #hope it never ever gets above this
+    unit_of_measurement: "£/kWh"
+    icon: mdi:currency-gbp
+  cumulative_energy_cost:
+    name: Cumulative Energy Cost
+    mode: box
+    min: 0
+    max: 5000
+    unit_of_measurement: "£"
+    icon: mdi:currency-gbp
+
+input_datetime:
+  last_reset:
+    name: When the cummulative meter value was last reset
+    has_date: true
+    has_time: false

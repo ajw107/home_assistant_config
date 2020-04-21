@@ -1,0 +1,16 @@
+title: Map
+views:
+  - title: Map
+    panel: true
+    cards:
+      - type: map
+        default_zoom: 12
+        entities:
+          - person.alex_wood
+          - person.jim_lean
+          - device_tracker.christiness_ipad_pro
+          - zone.fionas
+          - zone.home
+          - zone.parents
+          - zone.treasurecity
+        hours_to_show: 24

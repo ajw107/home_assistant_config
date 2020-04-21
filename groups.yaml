@@ -1,0 +1,52 @@
+anybody_home:
+    name: Is there anybody home
+    entities:
+      - person.alex_wood
+      - person.jim_lean
+    all: false
+
+energy_meters_yesterday:
+  name: Yesterdays usage from all energy reading devices (excluding the whole flat meter)
+  entities:
+    - sensor.alexa_socket_energy_yesterday
+    - sensor.bedroom_router_energy_yesterday
+    - sensor.bedroom_tv_energy_yesterday
+    - sensor.charger_socket_energy_yesterday
+    - sensor.fridge_socket_energy_yesterday
+    - sensor.pc_socket_energy_yesterday
+    - sensor.routers_energy_yesterday
+    - sensor.server_socket_energy_yesterday
+    - sensor.tv_socket_energy_yesterday
+
+energy_meters_today:
+  name: Todays usage SO FAR from all energy reading devices (excluding the whole flat meter)
+  entities:
+    - sensor.alexa_socket_energy_today
+    - sensor.bedroom_router_energy_today
+    - sensor.bedroom_tv_energy_today
+    - sensor.charger_socket_energy_today
+    - sensor.fridge_socket_energy_today
+    - sensor.pc_socket_energy_today
+    - sensor.routers_energy_today
+    - sensor.server_socket_energy_today
+    - sensor.tv_socket_energy_today
+
+energy_meters_immediate:
+  name: Instantaneous usage from all energy reading devices (excluding the whole flat meter)
+  entities:
+    - sensor.alexa_socket_energy_power
+    - sensor.bedroom_router_energy_power
+    - sensor.bedroom_tv_energy_power
+    - sensor.charger_socket_energy_power
+    - sensor.fridge_socket_energy_power
+    - sensor.pc_socket_energy_power
+    - sensor.routers_energy_power
+    - sensor.server_socket_energy_power
+    - sensor.tv_socket_energy_power
+
+switches_keep_on:
+  name: Switches to keep on all the time
+  entities:
+    - switch.fridge_socket
+    - switch.server_socket
+    - switch.pc_socket

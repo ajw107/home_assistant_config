@@ -1,0 +1,1177 @@
+#TODO:  Fix unclutter-car and energy screen
+#TODO:  Energy Screen a graph of energy cost per day over a month
+#       and per month over a year - maybe for each device too
+#TODO:  Add tasmota to dishwasher and graph
+#TODO:  Add tasmota to kettle and graph
+#TODO:  A screen of temps (maybe even a hotspot map against my floorplan (maybe picture entity card))
+#TODO:  A screen of all switches (to control)
+#TODO:  A screen of all lights
+#TODO:  A Screen for Climate and hot water
+#TODO:  A screen for all Media Players
+#TODO:  A screen for all sensor (maybe against floor plan with indicators
+#       for temp, humidity, light level and movement, etc)
+#TODO:  A new dashboard called FLat and views for each room
+#TODO:  A screen for timer, input booleans
+title: Energy Use
+decluttering_templates:
+  device_energy_graphs:     # This is the name of a template
+    default:
+      - icon: flash
+      - spanrows: 1
+      - spancols: 1
+    card:
+      name: '[[name]]'
+      icon: 'mdi:[[icon]]'
+      type: 'custom:mini-graph-card'
+      #gridrow: 4 / span 1 
+      gridrow: '[[row]] / span [[spanrows]]'
+      #gridcol: 1 / span 1
+      gridcol: '[[col]] / span [[spancols]]'
+      group: false
+      hour24: true
+      hours_to_show: 24
+      line_width: 4
+      points_per_hour: 4
+      show:
+        extrema: true
+        fill: fade
+        icon: true
+        labels: false
+        name: true
+        state: true
+      style: |
+        ha-card {
+          border: solid 2px var(--primary-color);
+          height: 100%;
+          width: 100%;
+        }
+      color_thresholds:
+        - color: '#039BE5'
+          value: 0
+        - color: '#0da035'
+          value: 600
+        - color: '#e0b400'
+          value: 1200
+        - color: '#e45e65'
+          value: 2400
+      color_thresholds_transition: hard
+      entities:
+        - '[[sensor]]'
+  standard_square_button:
+    default:
+      - size: 30%
+      - card_height: none
+      - lock_enabled: false
+      - color: auto
+      - name_color: auto
+      - spin: false
+      - show_name: true
+      - show_state: true
+      - show_label: false
+      - show_icon: true
+      - show_last_changed: false
+      - layout: vertical
+      - tap_action: none
+      - double_tap_action: none
+      - hold_action: none
+      - aspect_ratio: 1/1
+      - name: '[[[ return `${entity.attributes.friendly_name}` ]]]' #'&nbsp'
+      - label: '[[[ return `${entity.attributes.last_seen}` ]]]' #'&nbsp'
+      - opacity: 1.0
+      - on_icon_color: yellow
+      - active_icon_color: yellow      
+      - playing_icon_color: yellow
+      # - on_icon_color: var(--secondary-text-color)
+      # - active_icon_color: var(--secondary-text-color)      
+      # - playing_icon_color: var(--secondary-text-color)
+      - box_shadow: 0px 0px 2px 1px
+      # - box_shadow: 0px 0px 2px 1px var(--secondary-text-color)
+      # - box_shadow: 0px 0px 8px 2px var(--secondary-text-color)
+      - box_shadow_color: var(--secondary-text-color)
+      # - box_shadow_color: var(--paper-item-icon-active-color)
+    card:
+      type: custom:button-card
+      entity: '[[entity]]'
+      name: '[[name]]'
+      lock:
+        enabled: '[[lock_enabled]]'
+      size: '[[size]]'
+      aspect_ratio: '[[aspect_ratio]]'
+      label: '[[label]]'
+      layout: '[[layout]]'
+      color: '[[color]]'
+      show_name: '[[show_name]]'
+      show_icon: '[[show_icon]]'
+      show_state: '[[show_state]]'
+      show_label: '[[show_label]]'
+      show_last_changed: '[[show_last_changed]]'
+      tap_action: 
+        action: '[[tap_action]]'
+      double_tap_action:
+        action: '[[double_tap_action]]'
+      hold_action:
+        action: '[[hold_action]]'
+      styles:
+        lock:
+          - color: red
+        card:
+          - height: '[[card_height]]'
+          - border-radius: 6px
+          - padding-left: 5px
+          - opacity: '[[opacity]]'
+        name:
+          - color: '[[name_color]]'
+          - justify-self: start
+          - text-align: start
+          - font-family: Helvetica 
+          - font-size: 13px
+          - font-weight: bold
+        label:
+          - justify-self: start
+          - text-align: start
+          - font-family: Helvetica
+          - font-size: 11px
+          - opacity: '[[opacity]]'
+        state:
+          - justify-self: start
+          - text-align: start
+          - font-family: Helvetica
+          - font-size: 11px
+          - font-weight: bold
+          - text-transform: capitalize
+        grid:
+          - grid-template-areas: '"i" "n" "s" "l"'
+          - grid-template-columns: 1fr
+          - grid-template-rows: 1fr min-content min-content
+        img_cell:
+          - justify-content: start
+          - align-items: start
+
+      state:
+        #=== Used for Windows and Doors
+        #=== Used for Lights
+        #=== Used for TV On/Off Sensor
+        - value: 'on'
+          icon: '[[[ 
+                    if (entity.entity_id.includes("door")) return "mdi:door-open";
+                    else if (entity.entity_id.includes("window")) return "mdi:window-open";
+                    else if (entity.entity_id.includes("light")) return "mdi:lightbulb-on";
+                    else return "mdi:[[on_icon]]";
+                ]]]'
+          styles:
+            card:
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] [[box_shadow_color]]'
+              - color: var(--secondary-text-color)
+            name:
+              - color: black
+            icon:
+              - color: '[[on_icon_color]]'
+
+        #=== Used for Motion Sensors
+        - value: 'active'
+          icon: '[[[ 
+                    if (entity.entity_id.includes("motion")) return "mdi:motion-sensor";
+                    else return "mdi:[[active_icon]]";
+                ]]]'
+          styles:
+            card:
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] [[box_shadow_color]]'
+              - color: var(--secondary-text-color)
+            name:
+              - color: black
+            icon:
+              - color: '[[active_icon_color]]'
+
+        #=== Used for Sonos and Kodi
+        - value: 'playing'
+          icon: 'mdi:[[playing_icon]]'
+          styles:
+            card:
+              - opacity: 1.0
+              # - box-shadow: 0px 0px 8px 2px var(--secondary-text-color)
+              - box-shadow: '[[box_shadow]] [[box_shadow_color]]'
+              - color: var(--secondary-text-color)
+            name:
+              - color: black
+            icon:
+              - color: '[[playing_icon_color]]'
+
+        #=== Used for Windows and Doors
+        #=== Used for Lights
+        #=== Used for TV
+        - value: 'off'
+          icon: '[[[ 
+                    if (entity.entity_id.includes("door")) return "mdi:door-closed";
+                    else if (entity.entity_id.includes("window")) return "mdi:window-closed";
+                    else if (entity.entity_id.includes("light")) return "mdi:lightbulb";
+                    else return "mdi:[[off_icon]]";
+                ]]]'
+          styles:
+            card:
+              - opacity: 1.0
+
+        #=== Used for Motion Sensors
+        - value: 'idle'
+          icon: '[[[ 
+                    if (entity.entity_id.includes("motion")) return "mdi:human-handsdown";
+                    else return "mdi:[[idle_icon]]";
+                ]]]'
+          styles:
+            card:
+              - opacity: 1.0
+
+        #=== Used for Sonos and Kodi
+        - value: 'paused'
+          icon: 'mdi:[[paused_icon]]'
+          styles:
+            card:
+              - opacity: 1.0
+
+        #=== Used for Sonoff Switches
+        - value: 'unavailable'
+          icon: 'mdi:[[unavailable_icon]]'
+          styles:
+            card:
+              - color: red
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] red'
+            icon:
+              - color: red
+              - animation: blink 2s ease infinite
+
+        #=== Used for Battery Sensors
+        - operator: default
+          icon: 'mdi:[[unknown_icon]]'
+          styles:
+            card:
+              - color: red
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] red'
+              - color: var(--secondary-text-color)
+            icon:
+              - color: red
+              - animation: blink 2s ease infinite
+
+        #=== Used for Battery Sensors (Low Charge)
+        - value: '[[[ if (entity.entity_id.includes("battery")) return 20 ]]]'
+          operator: '<='
+          icon: mdi:battery-alert
+          styles:
+            card:
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] red'
+              - color: var(--secondary-text-color)
+            icon:
+              - color: red
+              - animation: blink 2s ease infinite
+
+        - value: '[[[ if (entity.entity_id.includes("battery")) return 40 ]]]'
+          operator: '<='
+          icon: mdi:battery-alert
+          styles:
+            card:
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] orange'
+              - color: var(--secondary-text-color)
+            icon:
+              - color: orange
+              - animation: blink 2s ease infinite
+
+        - value: '[[[ if (entity.entity_id.includes("battery")) return 40 ]]]'
+          operator: '>'
+          styles:
+            card:
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] [[box_shadow_color]]'
+              - color: var(--secondary-text-color)
+            icon:
+              - color: green
+
+        #=== Used for Battery Sensors (Charge Level)
+        - value: '[[[ 
+                      if (entity.entity_id.includes("battery")) return 0;
+                      else return 101;
+                  ]]]'
+          operator: '>='
+          icon: >
+            [[[
+              if (entity.state < 20) return "mdi:battery-10";
+              if (entity.state < 30) return "mdi:battery-20";
+              if (entity.state < 40) return "mdi:battery-30";
+              if (entity.state < 50) return "mdi:battery-40";
+              if (entity.state < 60) return "mdi:battery-50";
+              if (entity.state < 70) return "mdi:battery-60";
+              if (entity.state < 80) return "mdi:battery-70";
+              if (entity.state < 90) return "mdi:battery-80";
+              if (entity.state < 100) return "mdi:battery-90";
+              if (entity.state = 100) return "mdi:battery";
+            ]]]
+views:
+  - title: Electricity
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout: grid
+        gridrows: 100%
+        gridcols: 25% 25% 50%
+        cards:
+          - title: Meters
+            type: entities
+            gridrow: 1 / span 1
+            gridcol: 1 / span 1
+            style: |
+              ha-card {
+                border: solid 2px var(--primary-color);
+                height: 100%;
+              }
+            entities:
+              - entity: sensor.total_cost_today
+              - entity: sensor.cumulative_energy_cost
+              - entity: sensor.last_reset
+              - head:
+                  label: Tariff Prices
+                  type: section
+                padding: 0
+                type: 'custom:fold-entity-row'
+                entities:
+                  - entity: input_number.energy_cost_per_kwh
+                  - entity: script.reset_cumulative_cost
+              - head:
+                  label: Main Energy Meters
+                  type: section
+                padding: 0
+                open: true
+                type: 'custom:fold-entity-row'
+                entities:
+                  - entity: sensor.whole_flat_hourly_energy
+                    name: Whole Flat Hourly Usage
+                  - entity: sensor.whole_flat_hourly_energy_cost
+                    name: Whole Flat Hourly Cost
+                    icon: mdi:currency-gbp
+                  - entity: sensor.whole_flat_immediate_energy_cost
+                    name: Whole Flat Immediate Energy Use Cost
+                    icon: mdi:currency-gbp
+                  - entity: sensor.whole_flat_daily_energy
+                    name: Whole Flat Daily Usage
+                  - entity: sensor.whole_flat_daily_energy_cost
+                    name: Whole Flat Daily Cost
+                    icon: mdi:currency-gbp
+                  - entity: sensor.whole_flat_monthly_energy
+                    name: Whole Flat Monthly Usage
+                  - entity: sensor.whole_flat_monthly_energy_cost
+                    name: Whole Flat Monthly Cost
+                    icon: mdi:currency-gbp
+                  - type: divider
+                  - entity: sensor.tasmotas_total_energy_immediate
+                    name: Total Energy Tasmotas (Current)
+                  - entity: sensor.tasmotas_total_energy_cost_immediate
+                  - entity: sensor.tasmotas_total_energy_today
+                    name: Total Energy Tasmotas (Today So Far)
+                  - entity: sensor.tasmotas_total_energy_cost_today
+                  - entity: sensor.tasmotas_total_energy_yesterday
+                    name: Total Energy Tasmotas (Yesterday)
+                  - entity: sensor.tasmotas_total_energy_cost_yesterday
+              - head:
+                  label: Monitored Devices
+                  type: section
+                padding: 0
+                type: 'custom:fold-entity-row'
+                entities:
+                  - entity: sensor.alexa_socket_energy_today
+                    name: Alexa Today
+                  - entity: sensor.alexa_socket_energy_yesterday
+                    name: Alexa Yesterday
+                  - head:
+                      label: Alexa Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.alexa_energy_cost_yesterday
+                      - entity: sensor.alexa_energy_cost_daily_using_device
+                      - entity: sensor.alexa_energy_cost_immediate_using_device
+                      - entity: sensor.alexa_energy_cost_monthly_using_device
+                      - entity: sensor.alexa_energy_cost_immediate_using_utility
+                      - entity: sensor.alexa_energy_cost_daily_using_utility
+                      - entity: sensor.alexa_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.bedroom_router_energy_today
+                    name: Bedroom Router Today
+                  - entity: sensor.bedroom_router_energy_yesterday
+                    name: Bedroom Router Yesterday
+                  - head:
+                      label: Bedroom Router Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.bedroom_router_energy_cost_yesterday
+                      - entity: sensor.bedroom_router_energy_cost_daily_using_device
+                      - entity: sensor.bedroom_router_energy_cost_immediate_using_device
+                      - entity: sensor.bedroom_router_energy_cost_monthly_using_device
+                      - entity: sensor.bedroom_router_energy_cost_immediate_using_utility
+                      - entity: sensor.bedroom_router_energy_cost_daily_using_utility
+                      - entity: sensor.bedroom_router_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.bedroom_tv_energy_today
+                    name: Bedroom TV Today
+                  - entity: sensor.bedroom_tv_energy_yesterday
+                    name: Bedroom TV Yesterday
+                  - head:
+                      label: Bedroom TV Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.bedroom_tv_energy_cost_yesterday
+                      - entity: sensor.bedroom_tv_energy_cost_daily_using_device
+                      - entity: sensor.bedroom_tv_energy_cost_immediate_using_device
+                      - entity: sensor.bedroom_tv_energy_cost_monthly_using_device
+                      - entity: sensor.bedroom_tv_energy_cost_immediate_using_utility
+                      - entity: sensor.bedroom_tv_energy_cost_daily_using_utility
+                      - entity: sensor.bedroom_tv_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.charger_socket_energy_today
+                    name: Charger Today
+                  - entity: sensor.charger_socket_energy_yesterday
+                    name: Charger Yesterday
+                  - head:
+                      label: Charger Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.charger_energy_cost_yesterday
+                      - entity: sensor.charger_energy_cost_daily_using_device
+                      - entity: sensor.charger_energy_cost_immediate_using_device
+                      - entity: sensor.charger_energy_cost_monthly_using_device
+                      - entity: sensor.charger_energy_cost_immediate_using_utility
+                      - entity: sensor.charger_energy_cost_daily_using_utility
+                      - entity: sensor.charger_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.fridge_socket_energy_today
+                    name: Fridge Today
+                  - entity: sensor.fridge_socket_energy_yesterday
+                    name: Fridge Yesterday
+                  - head:
+                      label: Fridge Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.fridge_energy_cost_yesterday
+                      - entity: sensor.fridge_energy_cost_daily_using_device
+                      - entity: sensor.fridge_energy_cost_immediate_using_device
+                      - entity: sensor.fridge_energy_cost_monthly_using_device
+                      - entity: sensor.fridge_energy_cost_immediate_using_utility
+                      - entity: sensor.fridge_energy_cost_daily_using_utility
+                      - entity: sensor.fridge_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.pc_socket_energy_today
+                    name: PC Today
+                  - entity: sensor.pc_socket_energy_yesterday
+                    name: PC Yesterday
+                  - head:
+                      label: PC Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.pc_energy_cost_yesterday
+                      - entity: sensor.pc_energy_cost_daily_using_device
+                      - entity: sensor.pc_energy_cost_immediate_using_device
+                      - entity: sensor.pc_energy_cost_monthly_using_device
+                      - entity: sensor.pc_energy_cost_immediate_using_utility
+                      - entity: sensor.pc_energy_cost_daily_using_utility
+                      - entity: sensor.pc_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.routers_energy_today
+                    name: Routers Today
+                  - entity: sensor.routers_energy_yesterday
+                    name: Routers Yesterday
+                  - head:
+                      label: Routers Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.routers_energy_cost_yesterday
+                      - entity: sensor.routers_energy_cost_daily_using_device
+                      - entity: sensor.routers_energy_cost_immediate_using_device
+                      - entity: sensor.routers_energy_cost_monthly_using_device
+                      - entity: sensor.routers_energy_cost_immediate_using_utility
+                      - entity: sensor.routers_energy_cost_daily_using_utility
+                      - entity: sensor.routers_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.server_socket_energy_today
+                    name: Server Today
+                  - entity: sensor.server_socket_energy_yesterday
+                    name: Server Yesterday
+                  - head:
+                      label: Server Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.server_energy_cost_yesterday
+                      - entity: sensor.server_energy_cost_daily_using_device
+                      - entity: sensor.server_energy_cost_immediate_using_device
+                      - entity: sensor.server_energy_cost_monthly_using_device
+                      - entity: sensor.server_energy_cost_immediate_using_utility
+                      - entity: sensor.server_energy_cost_daily_using_utility
+                      - entity: sensor.server_energy_cost_monthly_using_utility
+                  - type: divider
+                  - entity: sensor.tv_socket_energy_today
+                    name: TV Today
+                  - entity: sensor.tv_socket_energy_yesterday
+                    name: TV Yesterday
+                  - head:
+                      label: TV Costs
+                      type: section
+                    padding: 0
+                    type: 'custom:fold-entity-row'
+                    entities:
+                      - entity: sensor.tv_energy_cost_yesterday
+                      - entity: sensor.tv_energy_cost_daily_using_device
+                      - entity: sensor.tv_energy_cost_immediate_using_device
+                      - entity: sensor.tv_energy_cost_monthly_using_device
+                      - entity: sensor.tv_energy_cost_immediate_using_utility
+                      - entity: sensor.tv_energy_cost_daily_using_utility
+                      - entity: sensor.tv_energy_cost_monthly_using_utility
+          - title: Main Power Graphs
+            type: custom:layout-card
+            layout: vertical
+            gridrow: 1 / span 1
+            gridcol: 2 / span 1
+            column_width: 100%
+            cards:
+            - name: Whole Flat Power
+              type: 'custom:mini-graph-card'
+              icon: mdi:gauge
+              group: false
+              hour24: true
+              hours_to_show: 24
+              line_width: 4
+              points_per_hour: 4
+              show:
+                extrema: true
+                fill: fade
+                icon: true
+                labels: hover
+                name: true
+                state: true
+                points: hover
+                average: true
+                name_adaptive_color: true
+                icon_adaptive_color: true
+                animate: true
+              style: |
+                ha-card {
+                  border: solid 2px var(--primary-color);
+                  height: 100%;
+                }
+              color_thresholds:
+                - color: '#039BE5'
+                  value: 0
+                - color: '#0da035'
+                  value: 600
+                - color: '#e0b400'
+                  value: 1200
+                - color: '#e45e65'
+                  value: 2400
+              color_thresholds_transition: hard
+              entities:
+                - entity: sensor.home_energy_meter_power
+                  state_adaptive_color: true
+            - name: Total Power From Tasmotas (Current)
+              type: 'custom:mini-graph-card'
+              icon: mdi:gauge
+              group: false
+              hour24: true
+              hours_to_show: 24
+              line_width: 4
+              points_per_hour: 4
+              show:
+                extrema: true
+                fill: fade
+                icon: true
+                labels: false
+                name: true
+                state: true
+              style: |
+                ha-card {
+                  border: solid 2px var(--primary-color);
+                  height: 100%;
+                }
+              color_thresholds:
+                - color: '#039BE5'
+                  value: 0
+                - color: '#0da035'
+                  value: 600
+                - color: '#e0b400'
+                  value: 1200
+                - color: '#e45e65'
+                  value: 2400
+              color_thresholds_transition: hard
+              entities:
+                - sensor.tasmotas_total_energy_immediate
+            - name: Total Power
+              type: 'custom:mini-graph-card'
+              group: false
+              hour24: true
+              hours_to_show: 24
+              line_width: 4
+              points_per_hour: 4
+              show:
+                extrema: true
+                fill: fade
+                icon: true
+                labels: false
+                name: true
+                state: true
+              style: |
+                ha-card {
+                  border: solid 2px var(--primary-color);
+                  height: 100%;
+                }
+              color_thresholds_transition: hard
+              color_thresholds:
+                - color: '#039BE5'
+                  value: 0
+                - color: '#0da035'
+                  value: 600
+                - color: '#e0b400'
+                  value: 1200
+                - color: '#e45e65'
+                  value: 2400
+              entities:
+                - sensor.total_power
+          - title: Individual Power Graphs
+            type: custom:layout-card
+            gridrow: 1 / span 1
+            gridcol: 3 / span 2
+            layout: grid
+            column_width: 100%
+            gridrows: 25% 25% 25% 25%
+            gridcols: 25% 25% 25% 25%
+            cards:
+              - name: Alexa Socket
+                type: 'custom:mini-graph-card'
+                gridrow: 1 / span 1
+                gridcol: 1 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.alexa_socket_energy_power
+              - name: Bedroom Router
+                type: 'custom:mini-graph-card'
+                gridrow: 1 / span 1
+                gridcol: 2 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.bedroom_router_energy_power
+              - name: Bedroom TV
+                type: 'custom:mini-graph-card'
+                gridrow: 1 / span 1
+                gridcol: 3 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                    width: 100%;                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.bedroom_tv_energy_power
+              - name: Charger Socket
+                type: 'custom:mini-graph-card'
+                gridrow: 1 / span 1
+                gridcol: 4 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.charger_socket_energy_power
+              - name: Fridge Socket
+                type: 'custom:mini-graph-card'
+                gridrow: 2 / span 1
+                gridcol: 1 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.fridge_socket_energy_power
+              - name: PC Socket
+                type: 'custom:mini-graph-card'
+                gridrow: 2 / span 1
+                gridcol: 2 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.pc_socket_energy_power
+              - name: Routers
+                type: 'custom:mini-graph-card'
+                gridrow: 2 / span 1
+                gridcol: 3 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.routers_energy_power
+              - name: Server Socket
+                type: 'custom:mini-graph-card'
+                gridrow: 2 / span 1
+                gridcol: 4 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.server_socket_energy_power
+              - name: TV Socket
+                type: 'custom:mini-graph-card'
+                gridrow: 3 / span 1
+                gridcol: 1 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.tv_socket_energy_power
+              - name: 3Phase Sensor 1
+                type: 'custom:mini-graph-card'
+                gridrow: 3 / span 1
+                gridcol: 2 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.home_energy_meter_3phase_power
+              - type: 'custom:mini-graph-card'
+                gridrow: 3 / span 1
+                gridcol: 3 / span 1
+                group: false
+                hour24: true
+                hours_to_show: 24
+                line_width: 4
+                points_per_hour: 4
+                show:
+                  extrema: true
+                  fill: fade
+                  icon: true
+                  labels: false
+                  name: true
+                  state: true
+                style: |
+                  ha-card {
+                    border: solid 2px var(--primary-color);
+                    height: 100%;
+                    width: 100%;
+                  }
+                color_thresholds:
+                  - color: '#039BE5'
+                    value: 0
+                  - color: '#0da035'
+                    value: 600
+                  - color: '#e0b400'
+                    value: 1200
+                  - color: '#e45e65'
+                    value: 2400
+                color_thresholds_transition: hard
+                entities:
+                  - sensor.home_energy_meter_3phase_2_power_2
+              - type: custom:decluttering-card
+                template: device_energy_graphs
+                variables:
+                  - name: 3Phase Sensor 3
+                  - icon: flash
+                  - row: 3
+                  - spanrows: 1
+                  - col: 4
+                  - spancols: 1
+                  - sensor: sensor.home_energy_meter_3phase_3_power_3
+              - type: custom:decluttering-card
+                template: device_energy_graphs
+                variables:
+                  - name: 3Phase Sensor 4
+                  - icon: flash
+                  - row: 4
+                  - spanrows: 1
+                  - col: 1
+                  - spancols: 1
+                  - sensor: sensor.home_energy_meter_3phase_4_power_4
+  - title: Batteries
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          min_columns: 10
+          column_width: 14%
+        filter:
+          include:
+            - entity_id: "*battery*"
+              options:
+                type: custom:decluttering-card
+                template: standard_square_button
+                variables:
+                  - entity: this.entity_id
+                  - unknown_icon: battery-alert
+                  - unavailable_icon: battery-unknown
+                  - tap_action: more-info
+                  - show_last_changed: true
+                  - size: 70%
+                  - opacity: 1.0
+                  - card_height: 200px
+                  - show_lable: true
+          exclude:
+            - entity_id: "*iphone*"
+            - entity_id: "*watch*"
+            - entity_id: "*ipad*"
+            - entity_id: "*k20*"
+        sort:
+          method: state
+          reverse: false
+          numeric: true
+  - title: Deliveries
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: 'custom:aftership-card'
+        entity: sensor.aftership
+        title: Packages
+  - title: TV
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout: horizontal
+        cards:
+          - type: entities
+            entities:
+              - switch.tv_socket
+              - input_boolean.tv_control
+              - input_boolean.tv_wake
+              - script.turn_off_tv
+              - script.video
+              - automation.turn_on_the_tv
+              - automation.properly_turn_off_the_tv
+              - automation.wake_the_tv_if_it_wants_to_go_to_sleep
+          - type: custom:layout-card
+            layout: horizontal
+            cards:
+              - type: custom:mini-media-player
+                entity: media_player.tv
+#                group: true
+                source: full
+                sound_mode: full
+                info: scroll
+              - type: custom:mini-media-player
+                entity: media_player.denon_avr_x2300w
+#                group: true
+                source: full
+                sound_mode: full
+                info: scroll
+              - type: custom:mini-media-player
+                entity: media_player.plex_plex_media_player_plexmediaplayer
+#                group: true
+                source: full
+                sound_mode: full
+                info: scroll
+              - type: custom:mini-media-player
+                entity: media_player.living_room_tv
+#                group: true
+              - type: custom:mini-media-player
+                entity: media_player.living_room_speaker
+#                group: true
+          - type: custom:harmony-card
+            entity: remote.harmony_hub
+            volume_entity: media_player.denon_avr_x2300w
+            activities:
+              - name: "Watch TV"
+                device: "Sony TV"
+              - name: "Videos"
+                device: "Flirc Media Player"
+              - name: "Watch Smart TV"
+                device: "Sony TV"
+              - name: "Watch a DVD"
+                device: "DVD"
+              - name: "Chromecast"
+                device: "Google Media Player"
+    #              "Denon AV Receiver"
+    #              "Video Recorder"
+  - title: Boiler
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout: horizontal
+        cards:
+          - type: entities
+            entities:
+              - switch.boiler_hot_water
+              - switch.boiler_heating
+          - type: thermostat
+            entity: climate.heating

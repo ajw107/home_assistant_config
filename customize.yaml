@@ -1,0 +1,82 @@
+light.gateway_light_34ce00924452:
+  friendly_name: hallway_night_light
+sensor.illumination_34ce00924452:
+  friendly_name: xiaomi_gateway_illumination_sensor
+sensor.aeon_labs_zw095_home_energy_meter_gen5_current:
+  friendly_name: home_energy_current
+sensor.aeon_labs_zw095_home_energy_meter_gen5_voltage:
+  friendly_name: home_energy_voltage
+sensor.aeon_labs_zw095_home_energy_meter_gen5_energy:
+  friendly_name: home_energy_energy
+sensor.aeon_labs_zw095_home_energy_meter_gen5_power:
+  friendly_name: home_energy_power
+sensor.aeon_labs_zw095_home_energy_meter_gen5_current_2:
+  friendly_name: home_energy2_current
+sensor.aeon_labs_zw095_home_energy_meter_gen5_voltage_2:
+  friendly_name: home_energy2_voltage
+sensor.aeon_labs_zw095_home_energy_meter_gen5_energy_2:
+  friendly_name: home_energy2_energy
+sensor.aeon_labs_zw095_home_energy_meter_gen5_power_2:
+  friendly_name: home_energy2_power
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_4:
+  friendly_name: home_energy_previous_current
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_3:
+  friendly_name: home_energy_previous_voltage
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_2:
+  friendly_name: home_energy_previous_power
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading:
+  friendly_name: home_energy_previous_energy
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_8:
+  friendly_name: home_energy2_previous_current
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_7:
+  friendly_name: home_energy2_previous_voltage
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_6:
+  friendly_name: home_energy2_previous_power
+sensor.aeon_labs_zw095_home_energy_meter_gen5_previous_reading_5:
+  friendly_name: home_energy2_previous_energy
+zwave.aeon_labs_zw095_home_energy_meter_gen5:
+  friendly_name: home_energy_root
+switch.horstmann_secure_meters_ssr_302_2_zone_thermostat_receiver_switch_2:
+  friendly_name: heat
+switch.horstmann_secure_meters_ssr_302_2_zone_thermostat_receiver_switch:
+  friendly_name: hot water
+zwave.horstmann_secure_meters_ssr_302_2_zone_thermostat_receiver:
+  friendly_name: boiler
+#binary_sensor.door_window_sensor_158d00019fc364:
+#  friendly_name: Front Door
+binary_sensor.vibration_158d0002c3b255:
+  friendly_name: Bathroom Vibration
+binary_sensor.vibration_158d0002c6c467:
+  friendly_name: Letterbox Vibration
+#sensor.pressure_158d000171df3f:
+#  friendly_name: Bedroom Pressure
+#sensor.pressure_158d0001a4c80a:
+#  friendly_name: Bathroom Pressure
+#sensor.pressure_158d000172025b:
+#  friendly_name: Office Pressure
+#sensor.temperature_158d0001a4c80a:
+#  friendly_name: Bathroom Temperature
+#sensor.temperature_158d000172025b:
+#  friendly_name: Office Temperature
+#sensor.temperature_158d000171df3f:
+#  friendly_name: Bedroom Temperature
+#sensor.humidity_158d0001a4c80a:
+#  friendly_name: Bathroom Humidity
+#sensor.humidity_158d000172025b:
+#  friendly_name: Office Humidity
+#sensor.humidity_158d000171df3f:
+#  friendly_name: Bedroom Humidity
+sensor.tilt_angle_158d0002c3b255:
+  friendly_name: Bathroom Tilt Angle
+sensor.tilt_angle_158d0002c6c467:
+  friendly_name: Letterbox Tilt Angle
+sensor.coordination_158d0002c3b255:
+  friendly_name: Bathroom Coordination
+sensor.coordination_158d0002c6c467:
+  friendly_name: Letterbox Coordination
+sensor.bed_activity_158d0002c3b255:
+  friendly_name: Bathroom Bed Activity
+sensor.bed_activity_158d0002c6c467:
+  friendly_name: Letterbox Coordination
+#binary_sensor.motion_sensor_158d0001d6693a:
+#  friendly_name: Bathroom Motion

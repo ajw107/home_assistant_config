@@ -1,0 +1,250 @@
+# https://dwainscheeren.github.io/lovelace-dwains-theme/configuration/rooms.html
+
+# rooms:
+#   - name: Hallway
+#     icon: fas:key
+#     light: light.hallway
+#     temperature: sensor.hallway_temperature
+#     climate: climate.hallway_climate
+#     humidity: sensor.halway_humidity
+#     motion: binary_sensor.hallway_sensor_motion
+#     door: binary_sensor.hallway_door_contact
+#     window: binary_sensor.hallway_window_contact
+#     vacuum: 
+#       entity: vacuum.rockrobo
+#       camera: camera.rockrobo_map
+#     plant: plant.hallway_plant
+#     media_player: media_player.awesome_hallway_tv
+#     more_entities:
+#       entities:
+#         - entity: sensor.hallway_motion_battery_level
+#         - entity: sensor.smokedetector_battery
+#   - name: Garage
+#     icon: fas:garage
+#     light: group.garage_lights
+#     door: group.garage_doors
+#     addons:
+#       - name: Hello room
+#         icon: fas:puzzle-piece
+#         path: 'dwains-theme/addons/rooms/hello-room/page.yaml'
+#         button_path: 'dwains-theme/addons/rooms/hello-room/button.yaml'
+#         data:
+#           some_data: 'This is some data parsed.'
+#           some_other_data: 'and some other data.'
+#           entity: vacuum.roborock
+#   - name: Bedroom
+#     icon: fal:bed
+#     more_entities:
+#       columns: 2 #optional
+#       entities:
+#         - entity: sensor.name1
+#         - entity: sensor.name2
+#     page_entities:
+#       columns: 1 #optional
+#       entities:
+#         - entity: sensor.name1
+#         - entity: sensor.name2
+
+rooms:
+  - name: Hallway
+    icon: fas:key
+    light: light.hallway_light_level
+#     temperature: sensor.hallway_temperature
+#     climate: climate.hallway_climate
+#     humidity: sensor.halway_humidity
+#     motion: binary_sensor.hallway_sensor_motion
+    door: binary_sensor.front_door
+#     window: binary_sensor.hallway_window_contact
+#     vacuum: 
+#       entity: vacuum.rockrobo
+#       camera: camera.rockrobo_map
+#     plant: plant.hallway_plant
+#     media_player: media_player.awesome_hallway_tv
+    more_entities:
+      entities:
+        - entity: sensor.letterbox_battery
+    page_entities:
+        - entity: light.gateway_light_34ce00924452
+        - entity: sensor.xiaomi_gateway_illumination_sensor
+        - entity: sensor.letterbox_action
+        - entity: sensor.letterbox_linkquality
+        - entity: sensor.letterbox_sensitivity
+        - entity: sensor.letterbox_strength
+        - entity: input_binary.hallway_light_override
+        - entity: timer.hallway
+#   - name: Garage
+#     icon: fas:garage
+#     light: group.garage_lights
+#     door: group.garage_doors
+#     addons:
+#       - name: Hello room
+#         icon: fas:puzzle-piece
+#         path: 'dwains-theme/addons/rooms/hello-room/page.yaml'
+#         button_path: 'dwains-theme/addons/rooms/hello-room/button.yaml'
+#         data:
+#           some_data: 'This is some data parsed.'
+#           some_other_data: 'and some other data.'
+#           entity: vacuum.roborock
+  - name: Bedroom
+    icon: fas:bed
+    light: light.bedroom_light_level
+    temperature: sensor.0x00158d000171df3f_temperature
+#    climate: climate.hallway_climate
+    humidity: sensor.0x00158d000171df3f_humidity
+    pressure: sensor.0x00158d000171df3f_pressure
+#    motion: binary_sensor.bedroom_motion
+    media_player: media_player.bedroom_echo
+    more_entities:
+      columns: 2 #optional
+      entities:
+        - entity: sensor.0x00158d000171df3f_battery
+        - entity: sensor.bedroom_router_socket_energy_yesterday
+        - entity: sensor.bedroom_router_socket_energy_today
+        - entity: sensor.bedroom_router_socket_energy_total
+        - entity: sensor.bedroom_router_socket_energy_totalstarttime
+        - entity: sensor.bedroom_tv_socket_energy_yesterday
+        - entity: sensor.bedroom_tv_socket_energy_today
+        - entity: sensor.bedroom_tv_socket_energy_total
+        - entity: sensor.bedroom_tv_socket_energy_totalstarttime
+    page_entities:
+      columns: 1 #optional
+      entities:
+        - entity: switch.bedroom_router
+        - entity: switch.bedroom_tv
+        - entity: sensor.bedroom_router_energy_power
+        - entity: sensor.bedroom_tv_energy_power
+        - entity: sensor.0x00158d000171df3f_linkquality
+  - name: Bathroom
+    icon: fas:bath
+    light: 
+    temperature: sensor.0x00158d0001a4c80a_temperature
+#    climate: climate.hallway_climate
+    humidity: sensor.0x00158d0001a4c80a_humidity
+    pressure: sensor.0x00158d0001a4c80a_pressure
+    motion: binary_sensor.0x00158d0001d6693a_occupancy
+    media_player: media_player.bathroom_echo
+    more_entities:
+      columns: 2 #optional
+      entities:
+        - entity: sensor.bathroom_vibration_battery
+        - entity: sensor.0x00158d0001a4c80a_battery
+        - entity: binary_sensor.0x00158d0001d6693a_battery
+    page_entities:
+      columns: 1 #optional
+      entities:
+        - entity: input_boolean.bathroom_light_override
+        - entity: timer.bathroom
+        - entity: sensor.bathroom_vibration_action
+        - entity: sensor.bathroom_vibration_sensitivity
+        - entity: sensor.bathroom_vibration_strength
+        - entity: sensor.bathroom_vibration_linkquality
+        - entity: sensor.0x00158d0001a4c80a_linkquality
+        - entity: binary_sensor.0x00158d0001d6693a_linkquality
+  - name: Kitchen
+    icon: fas:utensils
+    light: switch.kitchen_light
+    temperature: sensor.kitchen_multisensor_temperature
+#    climate: climate.hallway_climate
+    humidity: sensor.kitchen_multisensor_relative_humidity
+    motion: binary_sensor.kitchen_multisensor_motion
+#    media_player: media_player.bedroom_echo
+    more_entities:
+      columns: 2 #optional
+      entities: 
+        - entity: sensor.kitchen_multisensor_battery_level
+        - entity: sensor.fridge_socket_energy_yesterday
+        - entity: sensor.fridge_socket_energy_today
+        - entity: sensor.fridge_socket_energy_total
+        - entity: sensor.fridge_socket_energy_totalstarttime
+    page_entities:
+      columns: 1 #optional
+      entities:
+        - entity: switch.fridge_socket
+        - entity: sensor.fridge_socket_energy_power
+        - entity: sensor.kitchen_multisensor_luminance
+        - entity: input_boolean.kitchen_light_override
+        - entity: timer.kitchen
+  - name: Living Room
+    icon: fas:couch
+    light: light.living_room_lights
+    temperature: sensor.living_room_multisensor_temperature
+    climate: climate.heating
+    humidity: sensor.living_room_multisensor_relative_humidity
+    motion: binary_sensor.living_room_multisensor_motion
+    media_player: media_player.tv
+    more_entities:
+      columns: 2 #optional
+      entities: 
+        - entity: sensor.living_room_multisensor_luminance
+        - entity: sensor.living_room_multisensor_battery_level
+        - entity: sensor.alexa_socket_energy_yesterday
+        - entity: sensor.alexa_socket_energy_today
+        - entity: sensor.alexa_socket_energy_total
+        - entity: sensor.alexa_socket_energy_totalstarttime
+        - entity: sensor.charger_socket_energy_yesterday
+        - entity: sensor.charger_socket_energy_today
+        - entity: sensor.charger_socket_energy_total
+        - entity: sensor.charger_socket_energy_totalstarttime
+        - entity: sensor.pc_socket_energy_yesterday
+        - entity: sensor.pc_socket_energy_today
+        - entity: sensor.pc_socket_energy_total
+        - entity: sensor.pc_socket_energy_totalstarttime
+        - entity: sensor.routers_socket_energy_yesterday
+        - entity: sensor.routers_socket_energy_today
+        - entity: sensor.routers_socket_energy_total
+        - entity: sensor.routers_socket_energy_totalstarttime
+    page_entities:
+      columns: 1 #optional
+      entities:
+        - entity: media_player.living_room_speaker
+        - entity: media_player.alex_s_echo_show
+        - entity: media_player.plex_plex_media_player_plexmediaplayer
+        - entity: media_player.denon_avr_x2300w
+        - entity: switch.alexa_socket
+        - entity: switch.charger_socket
+        - entity: switch.pc_socket
+        - entity: switch.routers_socket
+  - name: Office
+    icon: fas:server
+#    light: 
+    temperature: sensor.0x00158d000172025b_temperature
+#    climate: climate.hallway_climate
+    humidity: sensor.0x00158d000172025b_humidity
+    pressure: sensor.0x00158d000172025b_pressure
+#    motion: 
+#    media_player: 
+    more_entities:
+      columns: 2 #optional
+      entities:
+        - entity: sensor.0x00158d000172025b_battery
+        - entity: sensor.server_socket_energy_yesterday
+        - entity: sensor.server_socket_energy_today
+        - entity: sensor.server_socket_energy_total
+        - entity: sensor.server_socket_energy_totalstarttime
+    page_entities:
+      columns: 1 #optional
+      entities:
+        - entity: sensor.0x00158d000172025b_linkquality
+        - entity: switch.server_socket
+        - entity: sensor.server_socket_energy_power
+  - name: Storage Cupboard
+    icon: fas:burn
+#    light: 
+#    temperature: 
+#    climate: climate.hallway_climate
+#    humidity: 
+#    motion: 
+#    media_player: 
+    more_entities:
+      columns: 2 #optional
+      entities:
+    page_entities:
+      columns: 1 #optional
+      entities:
+        - entity: switch.boiler_heating
+        - entity: switch.boiler_hot_water
+        - entity: sensor.home_energy_meter_power
+        - entity: sensor.home_energy_meter_energy
+        - entity: sensor.home_energy_meter2_power
+        - entity: sensor.home_energy_meter2_energy
+
