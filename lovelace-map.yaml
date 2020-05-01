@@ -9,6 +9,10 @@ views:
           - person.alex_wood
           - person.jim_lean
           - device_tracker.christiness_ipad_pro
+          - device_tracker.alexs_iphone
+          - device_tracker.alexs_iphone_2
+          - device_tracker.alexs_apple_watch
+          - device_tracker.life360_alex_wood
           - zone.fionas
           - zone.home
           - zone.parents

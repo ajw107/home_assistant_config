@@ -80,3 +80,38 @@ sensor.bed_activity_158d0002c6c467:
   friendly_name: Letterbox Coordination
 #binary_sensor.motion_sensor_158d0001d6693a:
 #  friendly_name: Bathroom Motion
+
+#17Track
+sensor.seventeentrack_packages_in_transit:
+  friendly_name: Parcels On Their Way
+  icon: mdi:truck-delivery
+  icon_colour: green
+sensor.seventeentrack_packages_delivered:
+  friendly_name: Delivered Parcels
+  icon: mdi:package-variant
+  icon_colour: blue
+sensor.seventeentrack_packages_not_found:
+  friendly_name: Parcels Not Found
+  icon: mdi:briefcase-search
+  icon_colour: red
+sensor.seventeentrack_packages_undelivered:
+  friendly_name: Parcels Undeliverable
+  icon: mdi:help-box  
+  icon_colour: red
+sensor.seventeentrack_packages_returned:
+  friendly_name: Parcels Returned
+  icon: mdi:directions-fork
+  icon_colour: red
+sensor.seventeentrack_packages_expired:   
+  friendly_name: Parcels Expired
+  icon: mdi:timer-off
+  icon_colour: grey
+sensor.seventeentrack_packages_ready_to_be_picked_up:  
+  friendly_name: Parcels To Collect
+  icon: mdi:package-variant-closed
+  icon_colour: purple
+
+#customize_glob:
+#"sensor.seventeentrack_package_*":
+#  friendly_name: test
+#                {{ name|regex_replace(find='Seventeentrack Package: ', replace='', ignorecase=True) }}

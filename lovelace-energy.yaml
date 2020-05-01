@@ -12,6 +12,24 @@
 #       for temp, humidity, light level and movement, etc)
 #TODO:  A new dashboard called FLat and views for each room
 #TODO:  A screen for timer, input booleans
+
+#ANCHORS
+delivery_icons:
+  icon1: &delivered_icon 'package-variant'
+  colour1: &delivered_colour 'green'
+  icon2: &in_transit_icon 'truck-delivery'
+  colour2: &in_transit_colour 'blue'
+  icon3: &not_found_icon 'briefcase-search'
+  colour3: &not_found_colour 'red'
+  icon4: &undeliverable_icon 'help-box'
+  colour4: &undeliverable_colour 'red'
+  icon5: &returned_icon 'directions-fork'
+  colour5: &returned_colour 'orange'
+  icon6: &expired_icon 'timer-off'
+  colour6: &expired_colour 'grey'
+  icon7: &collection_icon 'package-variant-closed'
+  colour7: &collection_colour 'purple'
+
 title: Energy Use
 decluttering_templates:
   device_energy_graphs:     # This is the name of a template
@@ -89,6 +107,20 @@ decluttering_templates:
       # - box_shadow: 0px 0px 8px 2px var(--secondary-text-color)
       - box_shadow_color: var(--secondary-text-color)
       # - box_shadow_color: var(--paper-item-icon-active-color)
+      - delivered_icon: package-variant
+      - delivered_colour: green
+      - in_transit_icon: truck-delivery
+      - in_transit_colour: blue
+      - not_found_icon: briefcase-search
+      - not_found_colour: red
+      - undeliverable_icon: help-box
+      - undeliverable_colour: red
+      - returned_icon: directions-fork
+      - returned_colour: orange
+      - expired_icon: timer-off
+      - expired_colour: grey
+      - collection_icon: package-variant-closed
+      - collection_colour: purple
     card:
       type: custom:button-card
       entity: '[[entity]]'
@@ -154,8 +186,8 @@ decluttering_templates:
         - value: 'on'
           icon: '[[[ 
                     if (entity.entity_id.includes("door")) return "mdi:door-open";
-                    else if (entity.entity_id.includes("window")) return "mdi:window-open";
-                    else if (entity.entity_id.includes("light")) return "mdi:lightbulb-on";
+                    elif (entity.entity_id.includes("window")) return "mdi:window-open";
+                    elif (entity.entity_id.includes("light")) return "mdi:lightbulb-on";
                     else return "mdi:[[on_icon]]";
                 ]]]'
           styles:
@@ -204,8 +236,8 @@ decluttering_templates:
         - value: 'off'
           icon: '[[[ 
                     if (entity.entity_id.includes("door")) return "mdi:door-closed";
-                    else if (entity.entity_id.includes("window")) return "mdi:window-closed";
-                    else if (entity.entity_id.includes("light")) return "mdi:lightbulb";
+                    elif (entity.entity_id.includes("window")) return "mdi:window-closed";
+                    elif (entity.entity_id.includes("light")) return "mdi:lightbulb";
                     else return "mdi:[[off_icon]]";
                 ]]]'
           styles:
@@ -308,6 +340,16 @@ decluttering_templates:
               if (entity.state < 100) return "mdi:battery-90";
               if (entity.state = 100) return "mdi:battery";
             ]]]
+        #for parcels
+        - value: 'Delivered'
+          icon: mdi:[[delivered_icon]]
+          styles:
+            card:
+              - opacity: 1.0
+              - box-shadow: '[[box_shadow]] [[box_shadow_color]]'
+              - color: var(--secondary-text-color)
+            icon:
+              - color: [[delivered_colour]]
 views:
   - title: Electricity
     type: custom:layout-card
@@ -1062,7 +1104,7 @@ views:
       - type: custom:auto-entities
         card:
           type: custom:layout-card
-          min_columns: 10
+          min_columns: 7
           column_width: 14%
         filter:
           include:
@@ -1095,9 +1137,159 @@ views:
     column_width: 100%
     panel: true
     cards:
-      - type: 'custom:aftership-card'
-        entity: sensor.aftership
-        title: Packages
+      - type: custom:layout-card
+        layout: vertical
+        column_width: 100%
+        cards:
+          # - type: custom:seventeen-track-card
+          #   entity: sensor.seventeentrack_packages_in_transit
+          # - type: custom:seventeen-track-card
+          #   entity: sensor.seventeentrack_packages_not_found
+          #   title: Packages Missing
+          - type: custom:layout-card
+            layout: vertical
+            column_width: 100%
+            cards:
+              - type: glance
+                columns: 7
+                title: Parcel Status
+                entities:
+                  - entity: sensor.seventeentrack_packages_delivered
+                    name: "Delivered"
+                    style: |
+                          :host {
+                            --paper-item-icon-color: green;
+                          }
+                  - entity: sensor.seventeentrack_packages_in_transit
+                    name: "On It's Way"
+                    style: |
+                          :host {
+                            --paper-item-icon-color: blue;
+                          }
+                  - entity: sensor.seventeentrack_packages_not_found
+                    name: "Not Found"
+                    style: |
+                          :host {
+                            --paper-item-icon-color: red;
+                          }
+                  - entity: sensor.seventeentrack_packages_ready_to_be_picked_up
+                    name: "To Collect"
+                    style: |
+                          :host {
+                            --paper-item-icon-color: purple;
+                          }
+                  - entity: sensor.seventeentrack_packages_expired
+                    name: Expired
+                    style: |
+                          :host {
+                            --paper-item-icon-color: grey;
+                          }
+                  - entity: sensor.seventeentrack_packages_returned
+                    name: Returned
+                    style: |
+                          :host {
+                            --paper-item-icon-color: orange;
+                          }
+                  - entity: sensor.seventeentrack_packages_undelivered
+                    name: Undeliverable
+                    style: |
+                          :host {
+                            --paper-item-icon-color: red;
+                          }
+              - type: custom:auto-entities
+                show_empty: false
+                card:
+                  type: entities
+                  column_width: 50%
+                  columns: 2
+                  title: Parcels
+                filter:
+                  include:
+                    - entity_id: "sensor.seventeentrack_package_*"
+                  #  - attributes:
+                  #      attribution: '/.*17track.net.*$/'
+                      options:
+                        type: "custom:template-entity-row"
+                        name: >-
+                            {{state_attr(config.entity, 'friendly_name')|regex_replace(find='Seventeentrack Package: ', replace='', ignorecase=True)}}
+                        secondary: >-
+                            {% if state_attr(config.entity, 'location') %}
+                              {% if state_attr(config.entity, 'location') == "CN" %}
+                                China:
+                              {% else %}
+                                 {{state_attr(config.entity, 'location')}}:
+                              {% endif %}
+                            {% endif %}
+                            {% if state_attr(config.entity, 'info_text') %}
+                              {{state_attr(config.entity, 'info_text')}}
+                            {% endif %}
+                        icon: >
+                              {% if states(config.entity) == "In Transit" %} 
+                                mdi:truck-delivery
+                              {% elif states(config.entity) == "Delivered" %}
+                                mdi:package-variant
+                              {% elif states(config.entity) == "Not Found" %}
+                                mdi:briefcase-search
+                              {% elif states(config.entity) == "Returned" %}
+                                mdi:directions-fork
+                              {% elif states(config.entity) == "Undelivered" %}
+                                mdi:help-box
+                              {% elif states(config.entity) == "Expired" %}
+                                mdi:timer-off
+                              {% elif states(config.entity) == "Collection" %}
+                                mdi:package-variant-closed
+                              {% else %}
+                                mdi:alert-circle
+                              {% endif %}
+#                        type: "custom:secondaryinfo-entity-row"
+#                        secondary_info: >
+#                                      <b style='color:red'> [[ {entity}.attributes.location ]]: [[ {entity}.attributes.info_text ]] </b>
+#                        tap_action:
+#                          action: url
+#                          url_path: 'https://17track.net/en/track#nums={{ config.entity.attributes.tracking_number }}'
+ #                       name: '`${entity.attributes.friendly_name}`'
+#                           '{{ config.entity.attributes.friendly_name }}'
+#                           '[[[ return `${entity.attributes.friendly_name}` ]]]'
+#                           [[[ entity.name.replace('Seventeentrack Package: ','') ]]]
+#                            [[[ entity.name|regex_replace(find='Seventeentrack Package: ', replace='', ignorecase=True) ]]]
+                        style: |
+                          :host {
+                            --paper-item-icon-color: 
+                              {% if states(config.entity) == "In Transit" %} 
+                                blue
+                              {% elif states(config.entity) == "Delivered" %}
+                                green
+                              {% elif states(config.entity) == "Not Found" %}
+                                red
+                              {% elif states(config.entity) == "Returned" %}
+                                orange
+                              {% elif states(config.entity) == "Undelivered" %}
+                                red
+                              {% elif states(config.entity) == "Expired" %}
+                                grey
+                              {% elif states(config.entity) == "Collection" %}
+                                purple
+                              {% else %}
+                                red
+                              {% endif %}
+                                ;
+                            animation: 
+                              {% if states(config.entity) != "In Transit" and states(config.entity) != "Delivered" %}
+                                blink 2s ease infinite
+                              {% endif %}
+                                ;
+                            }
+                  #exclude:
+                  #  - entity_id: sensor.seventeentrack_packages_delivered
+                  #  - entity_id: sensor.seventeentrack_packages_in_transit
+                  #  - entity_id: sensor.seventeentrack_packages_not_found
+                  #  - entity_id: sensor.seventeentrack_packages_ready_to_be_picked_up
+                  #  #- entity_id: sensor.seventeentrack_packages_expired
+                  #  #- entity_id: sensor.seventeentrack_packages_returned
+                  #  #- entity_id: sensor.seventeentrack_packages_undelivered
+          - type: 'custom:aftership-card'
+            entity: sensor.aftership
+            title: Packages
   - title: TV
     type: custom:layout-card
     layout: vertical

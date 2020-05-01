@@ -1,4 +1,6 @@
-#TODO: dark sky has been bought by apple, change weather provider
+#TODO:  dark sky has been bought by apple, change weather provider
+#TODO:  Mount remote backup folder, and make the automations backup
+#       copy backups to there too
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
@@ -11,6 +13,19 @@ homeassistant:
   # Read more here: https://www.home-assistant.io/docs/configuration/customizing-devices/
   # Uncomment line below and create file customize.yaml or edit it
   customize: !include customize.yaml
+  customize_glob:
+    "sensor.seventeentrack_package_*":
+      templates:
+        icon: >
+            if (state === 'In Transit') return 'mdi:truck-delivery';
+            else if (state === 'Delivered') return 'mdi:package-variant';
+            else return 'mdi:alert-box';
+        icon_color: >
+                if (state === 'In Transit') return 'blue'; 
+                else if (state === 'Delivered') return 'green';
+                else return 'red';
+        friendly_name: >
+                    {{ name|regex_replace(find='Seventeentrack Package: ', replace='', ignorecase=True) }}
 
   # Below entry links to the packages folder required for Dwains Theme
   packages: !include_dir_named packages/ # Comment this whole line if you want to disable Dwains Theme
@@ -166,8 +181,8 @@ xiaomi_aqara:
   gateways:
     - key: !secret xiaomi_gateway_access_key
 
-media_player:
-  - platform: denonavr
+#9media_player:
+ #9 - platform: denonavr
 #    host: IP_ADDRESS
 #    name: NAME
 #    show_all_sources: true
@@ -175,14 +190,14 @@ media_player:
 #    zones:
 #      - zone: Zone2 / Zone3
 #        name: NAME
-  - platform: braviatv
-    host: !secret living_room_tv_ip
-    name: TV
+#9  - platform: braviatv
+#9    host: !secret living_room_tv_ip
+#9    name: TV
 
-hdhomerun:
+#9hdhomerun:
     # Host addresses are optional, if none are specified then entities will be populated by network discovery.
-    sensor:
-        - host: !secret hd_homerun_ip
+ #9   sensor:
+ #9       - host: !secret hd_homerun_ip
 
 device_tracker:
   - platform: netgear
@@ -194,10 +209,10 @@ device_tracker:
 #  ssl: true
 #  api_key: !secret sabnzbd_api_key
 
-remote:
-  - platform: harmony
-    name: Harmony Hub
-    host: !secret harmony_hub_ip
+#9remote:
+#9  - platform: harmony
+#9    name: Harmony Hub
+#9    host: !secret harmony_hub_ip
 
 #withings:
 #  client_id: !secret withings_client_id
@@ -271,6 +286,8 @@ switch:
 recorder:
   db_url: !secret mysql_server_details
   purge_keep_days: 28
+  db_retry_wait: 60
+  db_max_retries: 1000
 
 # Example configuration.yaml entry
 # Text to speech
@@ -302,7 +319,18 @@ weather:
     api_key: !secret dark_sky_api
     units: uk
 
+auto_backup:
+  auto_purge: true
+
 sensor:
+  - platform: github
+    access_token: !secret github_access_token
+    repositories:
+      - path: 'ajw107/home_assistant_config'
+      - path: 'ajw107/PS_Set-Mouse'
+      - path: 'ajw107/iPeeU'
+      - path: 'ajw107/docker-sonarr'
+      - path: 'ajw107/docker-sabnzbd'
   - platform: aftership
     api_key: !secret aftership_api
   - platform: seventeentrack
@@ -336,13 +364,13 @@ sensor:
     state_topic: "zigbee2mqtt/bridge/config"
     value_template: "{{ value_json.coordinator }}"
     icon: mdi:chip
-  - platform: statistics
-    name: 'Power Stats'
-    entity_id: sensor.home_energy_meter_power
-    sampling_size: 10000
-    max_age:
-      hours: 24
-    precision: 1
+#9  - platform: statistics
+#9    name: 'Power Stats'
+#9    entity_id: sensor.home_energy_meter_power
+#9    sampling_size: 10000
+#9    max_age:
+#9      hours: 24
+#9    precision: 1
   - platform: template
     sensors:
       average_living_room_temperature:
@@ -740,6 +768,20 @@ lovelace:
     - url: /hacsfiles/button-card/button-card.js
       type: module
     - url: /hacsfiles/harmony-card/harmony-card.js
+      type: module
+    - url: /hacsfiles/lovelace-github-entity-row/github-entity-row.js
+      type: module
+    - url: /hacsfiles/seventeen-track-card/seventeen-track-card.js
+      type: module
+    - url: /hacsfiles/secondaryinfo-entity-row/secondaryinfo-entity-row.js
+      type: module
+    - url: /hacsfiles/lovelace-card-tools/card-tools.js
+      type: module
+    - url: /hacsfiles/config-template-card/config-template-card.js
+      type: module
+    - url: /hacsfiles/lovelace-card-templater/lovelace-card-templater.js
+      type: module
+    - url: /hacsfiles/lovelace-template-entity-row/template-entity-row.js
       type: module
   dashboards:
     lovelace-main:

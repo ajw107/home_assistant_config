@@ -1,7 +1,7 @@
 {
     "data": {
         "compact": false,
-        "onboarding_done": false,
+        "onboarding_done": true,
         "view": "Grid"
     },
     "key": "hacs.hacs",

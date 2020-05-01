@@ -38,7 +38,7 @@ turn_off_common_items:
     #- alias: turn off overrides
     - service: input_boolean.turn_off
       data:
-        entity_data:
+        entity_id:
           - input_boolean.kitchen_light_override
           - input_boolean.hallway_light_override
           - input_boolean.bathroom_light_override
