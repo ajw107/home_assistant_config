@@ -244,7 +244,7 @@ hacs:
   netdaemon: true
 
 shell_command:
-  shut_down_plex_player: "/usr/bin/ssh -i /config/TheMatrix_rsa -o ForwardX11=No -o StrictHostKeyChecking=No root@192.168.32.95 \"sync; shutdown -now\""
+  shut_down_plex_player: "/usr/bin/ssh -i /config/TheMatrix_rsa -o ForwardX11=No -o StrictHostKeyChecking=No root@192.168.32.95 \"sync; shutdown now\""
   mount_backup_share: "sudo /bin/mount -t nfs4 192.168.32.22:/mnt/ext4-data/Backups /share/thematrix-backups"
 
 input_boolean:

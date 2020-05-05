@@ -1212,6 +1212,7 @@ views:
                         type: "custom:template-entity-row"
                         name: >-
                             {{state_attr(config.entity, 'friendly_name')|regex_replace(find='Seventeentrack Package: ', replace='', ignorecase=True)}}
+                            ({{state_attr(config.entity, 'tracking_number')}})
                         secondary: >-
                             {% if state_attr(config.entity, 'location') %}
                               {% if state_attr(config.entity, 'location') == "CN" %}
@@ -1236,7 +1237,7 @@ views:
                                 mdi:help-box
                               {% elif states(config.entity) == "Expired" %}
                                 mdi:timer-off
-                              {% elif states(config.entity) == "Collection" %}
+                              {% elif states(config.entity) == "Ready to be Picked Up" %}
                                 mdi:package-variant-closed
                               {% else %}
                                 mdi:alert-circle
@@ -1267,7 +1268,7 @@ views:
                                 red
                               {% elif states(config.entity) == "Expired" %}
                                 grey
-                              {% elif states(config.entity) == "Collection" %}
+                              {% elif states(config.entity) == "Ready to be Picked Up" %}
                                 purple
                               {% else %}
                                 red
