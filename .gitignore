@@ -1,25 +1,46 @@
-secrets.yaml
+OZW_Log.txt
 TheMatrix_rsa
-known_devices.yaml
-services.yaml
-.storage/lovelace
-.storage/lovelace_dashboards
-.storage/lovelace_resources
 aircast.xml
-alexa_media.amazon@alex-wood.org.uk.pickle
 alexa_mediaamazon@alex-wood.org.ukget.html
 alexa_mediaamazon@alex-wood.org.ukpost.html
-.HA_VERSION
-lovelace-energy-all-grid.yaml
-original_ui-lovelace.yaml
-OZW_Log.txt
-ui-lovelace.yaml.mine
-options.xml
+appdaemon/
+bravia.conf
+custom_components/
+deps/
+glances/
+harmony_10864527.conf
+harmony_harmony_hub.conf
 home-assistant.log
+home-assistant_v2.db
+home-assistant_v2.db-shm
+home-assistant_v2.db-wal
+known_devices.yaml
+lovelace-energy-all-grid.yaml*
+lovelace-main.yaml
+myDashboards/
+new.gitignore
+old.gitignore
+orig/
+original_ui-lovelace.yaml
 pyozw.sqlite
+secrets.yaml
 traccar.xml
+tts/
+ui-lovelace.yaml.mine*
+www/community/
 zwcfg_0xca8d8631.xml
 zwscene.xml
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b93b9b3... forgot the .<name> files and directories
+.HA_VERSION
+.cloud/
+.storage/
+.vscode/
+<<<<<<< HEAD
+=======
 .storage/alexa_auth
 .storage/auth
 .storage/auth_provider.homeassistant
@@ -427,3 +448,23 @@ www/community/lovelace-template-entity-row/webpack.config.js
 www/community/lovelace-template-entity-row/webpack.config.js.gz
 www/community/seventeen-track-card/seventeen-track-card.js
 www/community/seventeen-track-card/seventeen-track-card.js.gz
+.storage/hacs.repositories
+wsdd
+.storage/hacs.repositories
+.storage/hacs.repositories
+wsdd
+.storage/hacs.repositories
+appdaemon/apps/ad-media-lights-sync/media_lights_sync.py
+custom_components/hacs/.translations/vi.json
+custom_components/hacs/helpers/action.py
+custom_components/hacs/helpers/__pycache__/action.cpython-37.pyc
+custom_components/hacs/translations/vi.json
+<<<<<<< HEAD
+>>>>>>> 8372806... Add ZWave Map to UI
+=======
+wsdd
+>>>>>>> 1e25423... Updated gitignore
+=======
+>>>>>>> b77c7c0... Made git ignore much more thorough
+=======
+>>>>>>> b93b9b3... forgot the .<name> files and directories

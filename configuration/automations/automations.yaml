@@ -50,7 +50,7 @@
   alias: Turn on kitchen light when there is movement
   trigger:
   - platform: state
-    entity_id: switch.kitchen_light
+    entity_id: switch.0x00158d0001309401_switch
     to: 'on'
   - entity_id: binary_sensor.kitchen_multisensor_motion
     platform: state
@@ -59,7 +59,7 @@
     entity_id: binary_sensor.0x00158d00047d4420_occupancy
     to: 'on'
   action:
-  - entity_id: switch.kitchen_light
+  - entity_id: switch.0x00158d0001309401_switch
     service: switch.turn_on
   - service: timer.start
     data:
@@ -80,7 +80,7 @@
     entity_id: input_boolean.kitchen_light_override
     state: 'off'
   action:
-  - entity_id: switch.kitchen_light
+  - entity_id: switch.0x00158d0001309401_switch
     service: switch.turn_off
 
 - id: front_door_opened
@@ -513,8 +513,18 @@
     - service: auto_backup.snapshot_full
       data_template:
         name: "AutoBackup: {{ now().strftime('%a, %-I:%M %p (%d/%m/%Y)') }}"
+<<<<<<< HEAD
+<<<<<<< HEAD
         keep_days: 2
         backup_path: '/share/thematrix-backups/HomeAssistant/AutoBackups/hourly/'
+=======
+        keep_days: 1
+        backup_path: '/share/AutoBackups/hourly'
+>>>>>>> 2e7c9ae... - New setting for HA 0.110.0 abd other things as forgot to commit previously 9oh new tabs in lovelace page)
+=======
+        keep_days: 1
+        backup_path: '/share/AutoBackups/hourly'
+>>>>>>> 8372806... Add ZWave Map to UI
 - alias: Perform Daily Backup
   trigger:
     platform: time
@@ -533,7 +543,15 @@
     data_template:
       name: "DailyBackup: {{ now().strftime('%A, %B %-d, %Y') }}"
       keep_days: 7
+<<<<<<< HEAD
+<<<<<<< HEAD
       backup_path: '/share/thematrix-backups/HomeAssistant/AutoBackups/daily/'
+=======
+      backup_path: '/share/AutoBackups/daily/'
+>>>>>>> 2e7c9ae... - New setting for HA 0.110.0 abd other things as forgot to commit previously 9oh new tabs in lovelace page)
+=======
+      backup_path: '/share/AutoBackups/daily/'
+>>>>>>> 8372806... Add ZWave Map to UI
 - alias: Perform Weekly Backup
   trigger:
     platform: time
@@ -547,7 +565,27 @@
     data_template:
       name: "WeeklyBackup: {{ now().strftime('%A, %B %-d, %Y') }}"
       keep_days: 28 # Store backup for a month, basically perform 1 backup each week and store for 4 weeks.
+<<<<<<< HEAD
+<<<<<<< HEAD
       backup_path: '/share/thematrix-backups/HomeAssistant/AutoBackups/weekly/'
+=======
+=======
+>>>>>>> 8372806... Add ZWave Map to UI
+      backup_path: '/share/AutoBackups/weekly/'
+- alias: Move Backups To Server
+  trigger:
+    - platform: time_pattern
+      hours: "/3"
+      minutes: 45
+  action:
+    service: hassio.addon_stdin
+    data:
+      addon: a0d7b954_ssh
+      input: "rsync --inplace --remove-source-files --archive --relative --size-only --recursive /share/./AutoBackups /share/thematrix-backups/HomeAssistant/"
+<<<<<<< HEAD
+>>>>>>> 2e7c9ae... - New setting for HA 0.110.0 abd other things as forgot to commit previously 9oh new tabs in lovelace page)
+=======
+>>>>>>> 8372806... Add ZWave Map to UI
 - alias: Bath Water Ready
   trigger:
     platform: numeric_state

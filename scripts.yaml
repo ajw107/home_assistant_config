@@ -53,7 +53,7 @@ turn_off_common_items:
     - service: switch.turn_off
       data:
         entity_id:
-          - switch.kitchen_light
+          - switch.0x00158d0001309401_switch
           - switch.boiler_hot_water
     #- alias: turn off heating
     - service: climate.turn_off

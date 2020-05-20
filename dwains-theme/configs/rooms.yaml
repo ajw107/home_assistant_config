@@ -142,7 +142,7 @@ rooms:
         - entity: binary_sensor.0x00158d0001d6693a_linkquality
   - name: Kitchen
     icon: fas:utensils
-    light: switch.kitchen_light
+    light: switch.0x00158d0001309401_switch
     temperature: sensor.kitchen_multisensor_temperature
 #    climate: climate.hallway_climate
     humidity: sensor.kitchen_multisensor_relative_humidity

@@ -1,6 +1,0 @@
-{
-    "editor.fontSize": 20,
-    "files.associations": {
-        "*.yaml": "home-assistant"
-    }
-}

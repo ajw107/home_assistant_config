@@ -55,7 +55,50 @@ alexa:
         - media_player
         - automation
       exclude_entities:
+        - switch.alex_s_alexa_app_for_pc_do_not_disturb_switch
+        - sensor.alex_s_alexa_app_for_pc_next_reminder
+        - sensor.alex_s_alexa_app_for_pc_next_alarm
+        - sensor.alex_s_alexa_app_for_pc_next_timer
+        - switch.alex_s_alexa_app_for_pc_repeat_switch
+        - switch.alex_s_alexa_app_for_pc_shuffle_switch
+        - switch.alex_s_echo_show_do_not_disturb_switch
+        - switch.alex_s_echo_show_next_reminder
+        - switch.alex_s_echo_show_next_alarm
+        - switch.alex_s_echo_show_next_timer
+        - switch.alex_s_echo_show_repeat_switch
+        - switch.alex_s_echo_show_shuffle_switch
         - switch.alex_s_fire_tablet_do_not_disturb_switch
+        - switch.alex_s_fire_tablet_next_reminder
+        - switch.alex_s_fire_tablet_next_alarm
+        - switch.alex_s_fire_tablet_next_timer
+        - switch.alex_s_fire_tablet_repeat_switch
+        - switch.alex_s_fire_tablet_shuffle_switch
+        - sensor.bathroom_do_not_disturb_switch
+        - sensor.bathroom_next_reminder
+        - sensor.bathroom_next_alarm
+        - sensor.bathroom_next_timer
+        - sensor.bathroom_repeat_switch
+        - sensor.bathroom_shuffle_switch
+        - sensor.bedroom_do_not_disturb_switch
+        - sensor.bedroom_next_reminder
+        - sensor.bedroom_next_alarm
+        - sensor.bedroom_next_timer
+        - sensor.bedroom_repeat_switch
+        - sensor.bedroom_shuffle_switch
+        - switch.everywhere_do_not_disturb_switch
+        - switch.everywhere_next_reminder
+        - switch.everywhere_next_alarm
+        - switch.everywhere_next_timer
+        - switch.everywhere_repeat_switch
+        - switch.everywhere_shuffle_switch
+        - sensor.hallway_do_not_disturb_switch
+        - sensor.hallway_next_reminder
+        - sensor.hallway_next_alarm
+        - sensor.hallway_next_timer
+        - sensor.hallway_repeat_switch
+        - sensor.hallway_shuffle_switch
+        - switch.this_device_do_not_disturb_switch
+        - switch.this_device_do_not_disturb_switch_2
         - switch.tv_socket
         - switch.boiler_heating
         - binary_sensor.bedroom_tv_button1
@@ -123,7 +166,7 @@ alexa:
         name: "Bedroom Light"
         description: "Ceiling Bedroom Light"
         display_categories: LIGHT
-      switch.kitchen_light:
+      switch.0x00158d0001309401_switch:
         name: "Kitchen Light"
         description: "Ceiling Kitchen Light"
         display_categories: LIGHT
@@ -138,6 +181,10 @@ alexa:
       binary_sensor.0x00158d0001d6693a_occupancy:
         name: "Bathroom Motion"
         description: "Bathroom PIR sensor"
+        display_categories: MOTION_SENSOR
+      binary_sensor.0x00158d00047d4420_occupancy:
+        name: "Kitchen Motion 2"
+        description: "Kitchen Xiaomi Sensor"
         display_categories: MOTION_SENSOR
       group.anybody_home:
         name: "Is there anybody home"
@@ -248,6 +295,7 @@ hacs:
 shell_command:
   shut_down_plex_player: "/usr/bin/ssh -i /config/TheMatrix_rsa -o ForwardX11=No -o StrictHostKeyChecking=No root@192.168.32.95 \"sync; shutdown now\""
   mount_backup_share: "sudo /bin/mount -t nfs4 192.168.32.22:/mnt/ext4-data/Backups /share/thematrix-backups"
+  move_autobackups: "rsync --inplace --remove-source-files --archive --relative --size-only --recursive /share/./AutoBackups /share/thematrix-backups/HomeAssistant/"
 
 input_boolean:
   tv_control:
@@ -742,6 +790,12 @@ panel_iframe:
 #      {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
     # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
 #    json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
+panel_custom:
+  - name: zwavegraph2
+    sidebar_title: Z-Wave Graph
+    sidebar_icon: mdi:access-point-network
+    url_path: zwave
+
 
 lovelace:
   mode: yaml
