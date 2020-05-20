@@ -12,6 +12,8 @@ homeassistant:
   # If you want to customize entries with friendly_name or custom icon.
   # Read more here: https://www.home-assistant.io/docs/configuration/customizing-devices/
   # Uncomment line below and create file customize.yaml or edit it
+  external_url: !secret homeass_base_url
+  internal_url: !secret homeass_int_url
   customize: !include customize.yaml
   customize_glob:
     "sensor.seventeentrack_package_*":
@@ -38,8 +40,8 @@ homeassistant:
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
-http:
-  base_url: !secret homeass_baseurl
+#http:
+#  base_url: !secret homeass_baseurl
 
 alexa:
   smart_home:

@@ -1101,36 +1101,40 @@ views:
     column_width: 100%
     panel: true
     cards:
-      - type: custom:auto-entities
-        card:
-          type: custom:layout-card
-          min_columns: 7
-          column_width: 14%
-        filter:
-          include:
-            - entity_id: "*battery*"
-              options:
-                type: custom:decluttering-card
-                template: standard_square_button
-                variables:
-                  - entity: this.entity_id
-                  - unknown_icon: battery-alert
-                  - unavailable_icon: battery-unknown
-                  - tap_action: more-info
-                  - show_last_changed: true
-                  - size: 70%
-                  - opacity: 1.0
-                  - card_height: 200px
-                  - show_lable: true
-          exclude:
-            - entity_id: "*iphone*"
-            - entity_id: "*watch*"
-            - entity_id: "*ipad*"
-            - entity_id: "*k20*"
-        sort:
-          method: state
-          reverse: false
-          numeric: true
+      - type: custom:layout-card
+        layout: vertical
+        column_width: 100%
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              min_columns: 7
+              column_width: 14%
+            filter:
+              include:
+                - entity_id: "*battery*"
+                  options:
+                    type: custom:decluttering-card
+                    template: standard_square_button
+                    variables:
+                      - entity: this.entity_id
+                      - unknown_icon: battery-alert
+                      - unavailable_icon: battery-unknown
+                      - tap_action: more-info
+                      - show_last_changed: true
+                      - size: 70%
+                      - opacity: 1.0
+                      - card_height: 200px
+                      - show_label: true
+              exclude:
+                - entity_id: "*iphone*"
+                - entity_id: "*watch*"
+                - entity_id: "*ipad*"
+                - entity_id: "*k20*"
+            sort:
+              method: state
+              reverse: false
+              numeric: true
   - title: Deliveries
     type: custom:layout-card
     layout: vertical
@@ -1298,61 +1302,65 @@ views:
     panel: true
     cards:
       - type: custom:layout-card
-        layout: horizontal
+        layout: vertical
+        column_width: 100%
         cards:
-          - type: entities
-            entities:
-              - switch.tv_socket
-              - input_boolean.tv_control
-              - input_boolean.tv_wake
-              - script.turn_off_tv
-              - script.video
-              - automation.turn_on_the_tv
-              - automation.properly_turn_off_the_tv
-              - automation.wake_the_tv_if_it_wants_to_go_to_sleep
-          - type: custom:layout-card
-            layout: horizontal
-            cards:
-              - type: custom:mini-media-player
-                entity: media_player.tv
-#                group: true
-                source: full
-                sound_mode: full
-                info: scroll
-              - type: custom:mini-media-player
-                entity: media_player.denon_avr_x2300w
-#                group: true
-                source: full
-                sound_mode: full
-                info: scroll
-              - type: custom:mini-media-player
-                entity: media_player.plex_plex_media_player_plexmediaplayer
-#                group: true
-                source: full
-                sound_mode: full
-                info: scroll
-              - type: custom:mini-media-player
-                entity: media_player.living_room_tv
-#                group: true
-              - type: custom:mini-media-player
-                entity: media_player.living_room_speaker
-#                group: true
-          - type: custom:harmony-card
-            entity: remote.harmony_hub
-            volume_entity: media_player.denon_avr_x2300w
-            activities:
-              - name: "Watch TV"
-                device: "Sony TV"
-              - name: "Videos"
-                device: "Flirc Media Player"
-              - name: "Watch Smart TV"
-                device: "Sony TV"
-              - name: "Watch a DVD"
-                device: "DVD"
-              - name: "Chromecast"
-                device: "Google Media Player"
-    #              "Denon AV Receiver"
-    #              "Video Recorder"
+        - type: custom:layout-card
+          layout: horizontal
+          cards:
+            - type: entities
+              entities:
+                - switch.tv_socket
+                - input_boolean.tv_control
+                - input_boolean.tv_wake
+                - script.turn_off_tv
+                - script.video
+                - automation.turn_on_the_tv
+                - automation.properly_turn_off_the_tv
+                - automation.wake_the_tv_if_it_wants_to_go_to_sleep
+            - type: custom:layout-card
+              layout: horizontal
+              cards:
+                - type: custom:mini-media-player
+                  entity: media_player.tv
+  #                group: true
+                  source: full
+                  sound_mode: full
+                  info: scroll
+                - type: custom:mini-media-player
+                  entity: media_player.denon_avr_x2300w
+  #                group: true
+                  source: full
+                  sound_mode: full
+                  info: scroll
+                - type: custom:mini-media-player
+                  entity: media_player.plex_plex_media_player_plexmediaplayer
+  #                group: true
+                  source: full
+                  sound_mode: full
+                  info: scroll
+                - type: custom:mini-media-player
+                  entity: media_player.living_room_tv
+  #                group: true
+                - type: custom:mini-media-player
+                  entity: media_player.living_room_speaker
+  #                group: true
+      #       - type: custom:harmony-card
+      #         entity: remote.harmony_hub
+      #         volume_entity: media_player.denon_avr_x2300w
+      #         activities:
+      #           - name: "Watch TV"
+      #             device: "Sony TV"
+      #           - name: "Videos"
+      #             device: "Flirc Media Player"
+      #           - name: "Watch Smart TV"
+      #             device: "Sony TV"
+      #           - name: "Watch a DVD"
+      #             device: "DVD"
+      #           - name: "Chromecast"
+      #             device: "Google Media Player"
+      # #              "Denon AV Receiver"
+      # #              "Video Recorder"
   - title: Boiler
     type: custom:layout-card
     layout: vertical
@@ -1368,3 +1376,140 @@ views:
               - switch.boiler_heating
           - type: thermostat
             entity: climate.heating
+  - title: Switches and Lights
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout: vertical
+        column_width: 100%
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: glance
+              title: "Lights"
+            filter:
+              include:
+                - domain: "light"
+                  options:
+                    tap_action:
+                      action: toggle
+                    icon: mdi:lightbulb
+                - entity_id: switch.kitchen_light
+                  options:
+                    tap_action:
+                      action: toggle
+                    icon: mdi:lightbulb
+            sort:
+              method: name
+          - type: custom:auto-entities
+            card:
+              type: glance
+              title: "Switches"
+            filter:
+              include:
+                - domain: "switch"
+                  options:
+                    tap_action:
+                      action: toggle
+                    icon: mdi:power-socket-uk
+              exclude:
+                - entity_id: switch.kitchen_light
+                - entity_id: "switch.adguard*"
+                - entity_id: switch.alex_s_alexa_apps_do_not_disturb_switch
+                - entity_id: "switch.alex_s_alexa_app_for_pc*"
+                - entity_id: "switch.alex_s_echo_show*"
+                - entity_id: switch.bathroom_do_not_disturb_switch
+                - entity_id: switch.bathroom_repeat_switch
+                - entity_id: switch.bedroom_do_not_disturb_switch
+                - entity_id: switch.bathroom_shuffle_switch
+                - entity_id: switch.bedroom_repeat_switch
+                - entity_id: switch.bedroom_shuffle_switch
+                - entity_id: switch.alex_s_fire_tablet_do_not_disturb_switch
+                - entity_id: "switch.everywhere*"
+                - entity_id: switch.hallway_do_not_disturb_switch
+                - entity_id: switch.hallway_repeat_switch
+                - entity_id: switch.hallway_shuffle_switch
+                - entity_id: switch.this_device_do_not_disturb_switch
+                - entity_id: switch.this_device_do_not_disturb_switch_2
+                - entity_id: switch.zigbee2mqtt_permit_join
+                - entity_id: switch.boiler_heating
+                - entity_id: switch.boiler_hot_water
+                - state: "unavailable"
+            sort:
+              method: name
+              reverse: false
+              numeric: true
+  - title: Motion Sensors
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout: vertical
+        column_width: 100%
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: glance
+              title: "Motion Sensors"
+            filter:
+              include:
+                - entity_id: "binary_sensor.*motion*"
+                - entity_id: "binary_sensor.*occupancy*"
+#                  options:
+#                    icon: mdi:lightbulb
+            sort:
+              method: name
+  - title: Climate
+    type: custom:layout-card
+    layout: vertical
+    column_width: 100%
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout: vertical
+        column_width: 100%
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: 'custom:mini-graph-card'
+              group: false
+              hour24: true
+              hours_to_show: 24
+              line_width: 4
+              points_per_hour: 4
+              show:
+                extrema: true
+                fill: fade
+                icon: true
+                labels: false
+                name: true
+                state: true
+              style: |
+                ha-card {
+                  border: solid 2px var(--primary-color);
+                  height: 100%;
+                  width: 100%;
+                }
+              color_thresholds:
+                - color: '#0000E5'
+                  value: 0
+                - color: '#0da035'
+                  value: 20
+                - color: '#e0b400'
+                  value: 25
+                - color: '#e45e65'
+                  value: 30
+              color_thresholds_transition: hard
+            filter:
+              include:
+                - entity_id: "sensor.*temp*"
+#                - entity_id: "ensor.*occupancy*"
+#                  options:
+#                    icon: mdi:lightbulb
+            sort:
+              method: name

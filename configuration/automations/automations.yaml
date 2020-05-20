@@ -55,6 +55,9 @@
   - entity_id: binary_sensor.kitchen_multisensor_motion
     platform: state
     to: 'on'
+  - platform: state
+    entity_id: binary_sensor.0x00158d00047d4420_occupancy
+    to: 'on'
   action:
   - entity_id: switch.kitchen_light
     service: switch.turn_on
@@ -376,11 +379,11 @@
     entity_id: group.anybody_home
     from: 'home'
   action:
-    - service: script.home_empty
-    - service: switch.turn_off
-      entity_id:
-        - switch.bedroom_tv
-        - switch.bedroom_router
+    - service: script.turn_off_common_items
+#    - service: switch.turn_off
+#      entity_id:
+#        - switch.bedroom_tv
+#        - switch.bedroom_router
     - service: light.turn_off
       entity_id: 
         - light.bedroom_light_level
@@ -511,7 +514,7 @@
       data_template:
         name: "AutoBackup: {{ now().strftime('%a, %-I:%M %p (%d/%m/%Y)') }}"
         keep_days: 2
-        backup_path: /share/thematrix-backups/HomeAssisant/AutoBackups/hourly
+        backup_path: '/share/thematrix-backups/HomeAssistant/AutoBackups/hourly/'
 - alias: Perform Daily Backup
   trigger:
     platform: time
@@ -530,7 +533,7 @@
     data_template:
       name: "DailyBackup: {{ now().strftime('%A, %B %-d, %Y') }}"
       keep_days: 7
-      backup_path: /share/thematrix-backups/HomeAssisant/AutoBackups/daily
+      backup_path: '/share/thematrix-backups/HomeAssistant/AutoBackups/daily/'
 - alias: Perform Weekly Backup
   trigger:
     platform: time
@@ -544,7 +547,7 @@
     data_template:
       name: "WeeklyBackup: {{ now().strftime('%A, %B %-d, %Y') }}"
       keep_days: 28 # Store backup for a month, basically perform 1 backup each week and store for 4 weeks.
-      backup_path: /share/thematrix-backups/HomeAssisant/AutoBackups/weekly
+      backup_path: '/share/thematrix-backups/HomeAssistant/AutoBackups/weekly/'
 - alias: Bath Water Ready
   trigger:
     platform: numeric_state
